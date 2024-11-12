@@ -1,12 +1,8 @@
 import axios from "axios";
-
 const api = axios.create({
   baseURL: "https://care-plus-topaz.vercel.app/api/v1",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  headers: { "Content-Type": "application/json" },
 });
-
 axios.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -18,5 +14,4 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 export default api;
