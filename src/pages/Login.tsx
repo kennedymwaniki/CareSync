@@ -21,6 +21,7 @@ const Login = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRF-Token": csrf
       },
       body: JSON.stringify(data),
     });
@@ -33,6 +34,7 @@ const Login = () => {
   };
 
   const onSubmit = async (data: FormValues) => {
+    console.log(data);
     setIsloading(true);
 
     try {
