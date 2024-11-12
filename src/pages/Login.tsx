@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../apis/authSlice";
 import NavBar from "../components/NavBar";
+import api from "../../axios";
+import axios from "axios";
 
 type FormValues = {
   email: string;
@@ -12,24 +14,37 @@ type FormValues = {
 
 const Login = () => {
   const [loading, setIsloading] = useState(false);
+
   const { register, handleSubmit } = useForm<FormValues>();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const login = async (data: FormValues) => {
-    const res = await fetch("https://care-plus-topaz.vercel.app/api/v1/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!res.ok) {
-      throw new Error("Login failed");
+    try {
+      const response = await api.post("/login", data);
+      return response.data;
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        // Handle Axios-specific errors
+        if (err.response) {
+          // Server responded with a status other than 200 range
+          console.error("Server responded with an error:", err.response.data);
+          throw new Error(err.response.data.message || "Login failed");
+        } else if (err.request) {
+          // Request was made but no response received
+          console.error("No response received:", err.request);
+          throw new Error("No response from server");
+        } else {
+          // Something happened in setting up the request
+          console.error("Error setting up request:", err.message);
+          throw new Error("Error setting up request");
+        }
+      } else {
+        // Handle non-Axios errors
+        console.error("An unexpected error occurred:", err);
+        throw new Error("An unexpected error occurred");
+      }
     }
-    console.log(res);
-    return res.json();
   };
 
   const onSubmit = async (data: FormValues) => {
