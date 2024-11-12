@@ -10,10 +10,6 @@ type FormValues = {
   password: string;
 };
 
-const metaElements = document.querySelectorAll('meta[name="csrf-token"]');
-const csrf =
-  metaElements.length > 0 ? (metaElements[0] as HTMLMetaElement).content : "";
-
 const Login = () => {
   const [loading, setIsloading] = useState(false);
   const { register, handleSubmit } = useForm<FormValues>();
@@ -25,7 +21,6 @@ const Login = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-Token": csrf,
       },
       body: JSON.stringify(data),
     });
@@ -33,7 +28,7 @@ const Login = () => {
     if (!res.ok) {
       throw new Error("Login failed");
     }
-
+    console.log(res);
     return res.json();
   };
 
@@ -44,7 +39,7 @@ const Login = () => {
     try {
       const response = await login(data);
       dispatch(loginUser({ user: response.user, token: response.token }));
-      navigate("/dashboard");
+      navigate("/admin");
     } catch (err) {
       console.error("Invalid email or password", err);
     } finally {

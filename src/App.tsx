@@ -3,7 +3,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Dash from "./components/Dash";
+import Dashboard from "./pages/Dashboard";
+
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Dash />,
+        element: <Dashboard />,
       },
     ],
   },

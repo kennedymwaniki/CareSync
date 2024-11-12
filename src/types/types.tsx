@@ -1,9 +1,9 @@
 export interface User {
   token: string;
   user: {
-    role: string;
     id: string;
-    fullName: string;
+    role: string;
+    name: string;
     email: string;
   };
 }

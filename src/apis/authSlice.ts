@@ -1,6 +1,6 @@
 import { AuthState } from "../types/types";
 import { createSlice } from "@reduxjs/toolkit";
-
+// api_url->"https://care-plus-topaz.vercel.app/api/v1/login
 const initialState: AuthState = {
   user: JSON.parse(localStorage.getItem("user") || "null"),
   token: localStorage.getItem("token"),
