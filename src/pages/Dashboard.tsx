@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 
-export function Layout() {
+const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <TopBar />
@@ -14,4 +14,6 @@ export function Layout() {
       </div>
     </div>
   );
-}
+};
+
+export default Dashboard;
