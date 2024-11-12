@@ -10,6 +10,10 @@ type FormValues = {
   password: string;
 };
 
+const metaElements = document.querySelectorAll('meta[name="csrf-token"]');
+const csrf =
+  metaElements.length > 0 ? (metaElements[0] as HTMLMetaElement).content : "";
+
 const Login = () => {
   const [loading, setIsloading] = useState(false);
   const { register, handleSubmit } = useForm<FormValues>();
@@ -21,7 +25,7 @@ const Login = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-Token": csrf
+        "X-CSRF-Token": csrf,
       },
       body: JSON.stringify(data),
     });
