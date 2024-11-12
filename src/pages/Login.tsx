@@ -17,7 +17,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const login = async (data: FormValues) => {
-    const res = await fetch("http://localhost:4000/api/v1/auth/login", {
+    const res = await fetch("https://care-plus-topaz.vercel.app/api/v1/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,7 +28,7 @@ const Login = () => {
     if (!res.ok) {
       throw new Error("Login failed");
     }
-
+    console.log(res);
     return res.json();
   };
 
@@ -39,7 +39,7 @@ const Login = () => {
     try {
       const response = await login(data);
       dispatch(loginUser({ user: response.user, token: response.token }));
-      navigate("/dashboard");
+      navigate("/admin");
     } catch (err) {
       console.error("Invalid email or password", err);
     } finally {
