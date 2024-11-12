@@ -11,9 +11,19 @@ type FormValues = {
   email: string;
   password: string;
 };
+type Notification = {
+  message: string;
+  type: "success" | "error";
+};
+type FormErrors = {
+  email: string;
+  password: string;
+};
 
 const Login = () => {
   const [loading, setIsloading] = useState(false);
+  const [error, setError] = useState<FormErrors | null>(null);
+  const [notification, setNotification] = useState<Notification | null>(null);
 
   const { register, handleSubmit } = useForm<FormValues>();
   const navigate = useNavigate();
@@ -53,6 +63,13 @@ const Login = () => {
 
     try {
       const response = await login(data);
+      if (response.error) {
+        if (response.errors) {
+          setError(response.errors);
+        }
+        setNotification({ message: response.message, type: "error" });
+        return;
+      }
       dispatch(loginUser({ user: response.user, token: response.token }));
       navigate("/admin");
     } catch (err) {
@@ -76,6 +93,17 @@ const Login = () => {
             </p>
           </div>
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border-2 p-4 rounded-lg">
+            {notification && (
+              <div
+                className={
+                  notification?.type == "error"
+                    ? "text-red-500"
+                    : "text-green-500"
+                }
+              >
+                {notification.message}
+              </div>
+            )}
             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               <div>
                 <label
@@ -90,6 +118,7 @@ const Login = () => {
                   {...register("email", { required: true })}
                   className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                 />
+                <div className="text-red-500">{error?.email}</div>
               </div>
               <div>
                 <label
@@ -104,6 +133,7 @@ const Login = () => {
                   {...register("password", { required: true })}
                   className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                 />
+                <div className="text-red-500">{error?.password}</div>
               </div>
               <div>
                 <button
