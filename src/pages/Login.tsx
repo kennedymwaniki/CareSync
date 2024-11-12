@@ -21,7 +21,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const login = async (data: FormValues) => {
-    const res = await fetch("http://localhost:4000/api/v1/auth/login", {
+    const res = await fetch("https://care-plus-topaz.vercel.app/api/v1/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
