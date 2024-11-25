@@ -23,6 +23,11 @@ const NavBar = () => {
           </Link>
         </li>
         <li>
+          <Link to="/patient" className="text-white hover:text-gray-200">
+            Patient
+          </Link>
+        </li>
+        <li>
           <Link to="/admin" className="text-white hover:text-gray-200">
             {isAuthenticated ? "Dashboard" : "want to see dashboard"}
           </Link>

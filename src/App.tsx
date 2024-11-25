@@ -2,8 +2,13 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
-import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import PatientDashboard from "./features/patient/PatientDashboard";
+import PatientSummary from "./features/patient/PatientSummary";
+import Medication from "./features/patient/Medication";
+import PatientReminders from "./features/patient/PatientReminders";
+import CareProvidersList from "./features/care providers/CareProvidersList";
+import PatientAnalytics from "./features/patient/PatientAnalytics";
 
 const router = createBrowserRouter([
   {
@@ -20,11 +25,31 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <ProtectedRoute />,
+    element: <Dashboard />,
+  },
+  {
+    path: "/patient",
+    element: <PatientDashboard />,
     children: [
       {
         index: true,
-        element: <Dashboard />,
+        element: <PatientSummary />,
+      },
+      {
+        path: "medication",
+        element: <Medication />,
+      },
+      {
+        path: "patient-reminder",
+        element: <PatientReminders />,
+      },
+      {
+        path: "care-providers",
+        element: <CareProvidersList />,
+      },
+      {
+        path: "patient-report",
+        element: <PatientAnalytics />,
       },
     ],
   },
