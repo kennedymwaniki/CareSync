@@ -50,17 +50,35 @@ const Sidebar = ({ navigation }: SidebarProps) => {
         </nav>
 
         <div className="mt-48 px-2 space-y-1">
-          <button className="group flex items-center gap-2 px-2 py-2 text-sm font-medium rounded-md text-black hover:bg-[#454ae756] hover:text-[#454BE7]">
+          <NavLink
+            to="/notifications"
+            className={({ isActive }) =>
+              `group flex items-center gap-2 px-2 py-2 text-sm font-medium rounded-md ${
+                isActive
+                  ? "bg-[#454ae756] text-[#454BE7]"
+                  : "text-black hover:bg-[#454ae756] hover:text-[#454BE7]"
+              }`
+            }
+          >
             <FiBell className="h-5 w-5 mr-3 flex-shrink-0" />
             <span className="flex-1">Notifications</span>
             <span className="mx-auto text-xs bg-blue-600 text-white rounded-full px-2 py-0.5 ">
               2
             </span>
-          </button>
-          <button className="group flex items-center px-2 py-2 text-sm font-medium  text-black hover:bg-[#454ae756] hover:text-[#454BE7] rounded-md">
+          </NavLink>
+          <NavLink
+            to="/settings"
+            className={({ isActive }) =>
+              `group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                isActive
+                  ? "bg-[#454ae756] text-[#454BE7]"
+                  : "text-black hover:bg-[#454ae756] hover:text-[#454BE7]"
+              }`
+            }
+          >
             <FiSettings className="h-5 w-5 mr-3 flex-shrink-0" />
             <span className="flex-1">Settings</span>
-          </button>
+          </NavLink>
         </div>
       </div>
 

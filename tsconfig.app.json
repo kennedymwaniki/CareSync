@@ -9,6 +9,7 @@
 
     /* Bundler mode */
     "moduleResolution": "Bundler",
+    "forceConsistentCasingInFileNames": true,
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
