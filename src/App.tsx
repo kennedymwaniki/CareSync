@@ -9,6 +9,7 @@ import Medication from "./features/patient/Medication";
 import PatientReminders from "./features/patient/PatientReminders";
 import CareProvidersList from "./features/care providers/CareProvidersList";
 import PatientAnalytics from "./features/patient/PatientAnalytics";
+import PatientProfile from "./features/patient/PatientProfile";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "patient-report",
         element: <PatientAnalytics />,
+      },
+      {
+        path: "patient-profile",
+        element: <PatientProfile />,
       },
     ],
   },

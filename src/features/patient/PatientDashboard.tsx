@@ -4,6 +4,7 @@ import { FiServer } from "react-icons/fi";
 import { GiMedicines } from "react-icons/gi";
 import { FaUserNurse } from "react-icons/fa";
 import { Outlet } from "react-router-dom";
+import RightSideBar from "../../components/RightSideBar";
 
 const patientNavigation = [
   { name: "Patient Dashboard", icon: FiServer, path: "." },
@@ -17,9 +18,10 @@ const PatientDashboard = () => {
   return (
     <div className="flex">
       <Sidebar navigation={patientNavigation} />
-      <main>
+      <main className="flex-1">
         <Outlet />
       </main>
+      <RightSideBar />
     </div>
   );
 };
