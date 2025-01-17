@@ -23,7 +23,7 @@ function TotalVitals() {
   };
   return (
     <div className="flex flex-col justify-between mt-4">
-      <h4 className="ml-2 font-light">Current Vitals</h4>
+      <h4 className="ml-2 font-medium from-neutral-950">Current Vitals</h4>
       <div className="flex justify-between p-2">
         <Vitals content={data} />
         <Vitals content={data2} />

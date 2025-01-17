@@ -1,5 +1,9 @@
 function Notifications() {
-  return <div></div>;
+  return (
+    <div>
+      <p>Upcoming Medication</p>
+    </div>
+  );
 }
 
 export default Notifications;
