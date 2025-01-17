@@ -17,7 +17,7 @@ const PatientDashboard = () => {
   return (
     <div className="flex">
       <Sidebar navigation={patientNavigation} />
-      <main className="">
+      <main className="flex-1">
         <Outlet />
       </main>
     </div>
