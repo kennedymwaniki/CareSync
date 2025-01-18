@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from "react";
+import { useState } from "react";
 import { FiFilter } from "react-icons/fi";
 import Nodata from "../assets/medication baner.png";
 import { isToday } from "date-fns";
+import api from "../../axios";
 interface Medication {
   id: number;
   name: string;
@@ -16,7 +17,7 @@ interface Medication {
   notes: string;
 }
 
-const MedicationsTable: React.FC = () => {
+const MedicationsTable = () => {
   // Dummy data for medications
   const dummyMedications: Medication[] = [
     {
@@ -84,11 +85,35 @@ const MedicationsTable: React.FC = () => {
       name: "Ciprofloxacin",
       dosage: "500mg",
       frequency: "Twice a day",
-      startDate: "2025-01-17",
+      startDate: "2025-01-18",
       endDate: "2025-01-19",
       prescriber: "Dr. Johnson",
       instructions: "Before meals",
-      status: "Active",
+      status: "Today",
+      notes: "Avoid sunlight",
+    },
+    {
+      id: 7,
+      name: "Ciprofloxacin",
+      dosage: "500mg",
+      frequency: "Twice a day",
+      startDate: "2025-01-18",
+      endDate: "2025-01-19",
+      prescriber: "Dr. Johnson",
+      instructions: "Before meals",
+      status: "Today",
+      notes: "Avoid sunlight",
+    },
+    {
+      id: 8,
+      name: "Ciprofloxacin",
+      dosage: "500mg",
+      frequency: "Twice a day",
+      startDate: "2025-01-18",
+      endDate: "2025-01-19",
+      prescriber: "Dr. Johnson",
+      instructions: "Before meals",
+      status: "Today",
       notes: "Avoid sunlight",
     },
   ];
@@ -97,6 +122,18 @@ const MedicationsTable: React.FC = () => {
     useState<Medication[]>(dummyMedications);
   const [filter, setFilter] = useState<"All" | "Today">("All");
   const [currentPage, setCurrentPage] = useState(1);
+
+  const getMedications = async (): Promise<void> => {
+    try {
+      const response = await api.get("medication");
+      const data: Medication[] = response.data;
+      setMedications(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getMedications();
 
   const rowsPerPage = 5;
   const today = isToday(new Date())
@@ -173,7 +210,7 @@ const MedicationsTable: React.FC = () => {
                   <img
                     src={Nodata}
                     alt="No Data"
-                    className="mx-auto w-40 h-40"
+                    className="mx-auto w-80 h-80"
                   />
                   <p className="mt-4 text-gray-500">No medications available</p>
                 </td>
