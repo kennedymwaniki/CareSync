@@ -140,7 +140,7 @@ const MedicationsTable = () => {
     ? new Date().toISOString().split("T")[0]
     : "";
 
-  // Filter medications based on filter type
+  // ! fix this part its not working
   const filteredMedications = medications.filter((med) => {
     if (filter === "Today") {
       return med.startDate <= today && med.endDate >= today;
