@@ -1,5 +1,5 @@
 const CareProvidersList = () => {
-  return <div>CareProvidersList</div>;
+  return <div></div>;
 };
 
 export default CareProvidersList;
