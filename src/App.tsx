@@ -7,9 +7,10 @@ import PatientDashboard from "./features/patient/PatientDashboard";
 import PatientSummary from "./features/patient/PatientSummary";
 import Medication from "./features/patient/Medication";
 import PatientReminders from "./features/patient/PatientReminders";
-import CareProvidersList from "./features/care providers/CareProvidersList";
+// import CareProvidersList from "./features/care providers/CareProvidersList";
 import PatientAnalytics from "./features/patient/PatientAnalytics";
 import PatientProfile from "./features/patient/PatientProfile";
+import CareProvidersTable from "./features/patient/CareProvidersTable";
 
 const router = createBrowserRouter([
   {
@@ -46,7 +47,7 @@ const router = createBrowserRouter([
       },
       {
         path: "care-providers",
-        element: <CareProvidersList />,
+        element: <CareProvidersTable />,
       },
       {
         path: "patient-report",
