@@ -113,11 +113,11 @@ const PatientProfile = () => {
           )}
         </div>
       </div>
-      <div className="flex justify-between space-x-1">
+      <div className="flex justify-evenly space-x-2">
         {/* Medical History */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold mb-4">Medical History</h2>
-          <ul className="list-none  bg-white border-r p-4">
+          <ul className="list-none text-sm text-nowrap bg-white border-r p-4">
             {dummyData.medicalHistory.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
@@ -127,7 +127,7 @@ const PatientProfile = () => {
         {/* Timeline */}
         <div>
           <h2 className="text-xl font-semibold mb-4">Time Line</h2>
-          <table className="table-auto w-full bg-white  overflow-hidden">
+          <table className="table-auto w-auto bg-white  overflow-hidden">
             <thead className="bg-gray-200">
               <tr>
                 <th className="p-4 text-left">Date of Visits</th>
