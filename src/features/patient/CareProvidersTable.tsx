@@ -66,7 +66,7 @@ const CareProvidersTable = () => {
     },
   ];
 
-  const [data, setData] = useState<CareProvider[]>(initialData);
+  const [data, _setData] = useState<CareProvider[]>(initialData);
   const [search, setSearch] = useState("");
   const [filterRole, setFilterRole] = useState<string | null>(null);
   const [filterActive, setFilterActive] = useState<boolean | null>(null);
