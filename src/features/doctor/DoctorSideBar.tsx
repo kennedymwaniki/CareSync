@@ -11,7 +11,7 @@ interface SidebarProps {
   }[];
 }
 
-const PatientSideBar = ({ navigation }: SidebarProps) => {
+const DoctorSideBar = ({ navigation }: SidebarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -21,12 +21,12 @@ const PatientSideBar = ({ navigation }: SidebarProps) => {
   return (
     <aside className="w-64 bg-white shadow-xl min-h-screen flex flex-col  border-r">
       <div>
-        <div className="flex items-center justify-center py-4">
+        <div className="flex items-center justify-center py-4 t">
           <NavLink to="/" className="text-black font-bold text-xl">
             CareSync+
           </NavLink>
         </div>
-        <nav className="mt-5 px-2">
+        <nav className="mt-5 px-2 text-nowrap">
           <div className="space-y-1">
             {navigation.map((item) => (
               <NavLink
@@ -105,7 +105,7 @@ const PatientSideBar = ({ navigation }: SidebarProps) => {
         {dropdownOpen && (
           <div className="mt-2 bg-gray-800 rounded-md shadow-lg overflow-hidden">
             <NavLink
-              to="patient-profile"
+              to="doctor-profile"
               className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
             >
               Profile
@@ -123,4 +123,4 @@ const PatientSideBar = ({ navigation }: SidebarProps) => {
   );
 };
 
-export default PatientSideBar;
+export default DoctorSideBar;

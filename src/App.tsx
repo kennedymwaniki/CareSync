@@ -11,6 +11,10 @@ import PatientReminders from "./features/patient/PatientReminders";
 import PatientAnalytics from "./features/patient/PatientAnalytics";
 import PatientProfile from "./features/patient/PatientProfile";
 import CareProvidersTable from "./features/patient/CareProvidersTable";
+import PatientNotifications from "./features/patient/PatientNotifications";
+import DoctorDashboard from "./features/doctor/DoctorDashboard";
+import DoctorSummary from "./features/doctor/DoctorSummary";
+import DoctorNotes from "./features/doctor/DoctorNotes";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +32,20 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <Dashboard />,
+  },
+  {
+    path: "/doctor",
+    element: <DoctorDashboard />,
+    children: [
+      {
+        index: true,
+        element: <DoctorSummary />,
+      },
+      {
+        path: "shared-notes",
+        element: <DoctorNotes />,
+      },
+    ],
   },
   {
     path: "/patient",
@@ -56,6 +74,10 @@ const router = createBrowserRouter([
       {
         path: "patient-profile",
         element: <PatientProfile />,
+      },
+      {
+        path: "patient-notifications",
+        element: <PatientNotifications />,
       },
     ],
   },
