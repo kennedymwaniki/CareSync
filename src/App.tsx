@@ -15,6 +15,7 @@ import PatientNotifications from "./features/patient/PatientNotifications";
 import DoctorDashboard from "./features/doctor/DoctorDashboard";
 import DoctorSummary from "./features/doctor/DoctorSummary";
 import DoctorNotes from "./features/doctor/DoctorNotes";
+import PatientsListTable from "./features/doctor/PatientsListTable";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,14 @@ const router = createBrowserRouter([
       {
         path: "shared-notes",
         element: <DoctorNotes />,
+      },
+      {
+        path: "patients",
+        element: <PatientsListTable />,
+      },
+      {
+        path: "care-providers",
+        element: <CareProvidersTable />,
       },
     ],
   },

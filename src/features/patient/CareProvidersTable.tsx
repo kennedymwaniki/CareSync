@@ -172,7 +172,13 @@ const CareProvidersTable = () => {
           <tbody>
             {filteredData.map((provider, index) => (
               <tr key={index} className="hover:bg-gray-50 text-sm text-nowrap">
-                <td className=" px-4 py-2 text-center">{provider.profile}</td>
+                <td className="px-4 py-2">
+                  <img
+                    src={provider.profile}
+                    alt={provider.name}
+                    className="w-8 h-8 rounded-full"
+                  />
+                </td>
                 <td className=" px-4 py-2">{provider.name}</td>
                 <td className=" px-4 py-2">{provider.role}</td>
                 <td className=" px-4 py-2">{provider.specialty}</td>
