@@ -11,7 +11,6 @@ type Patient = {
 };
 
 const PatientsListTable = () => {
-  // 5 rows of dummy data with proper profile image URL
   const patientData: Patient[] = [
     {
       profile: "https://via.placeholder.com/40",
