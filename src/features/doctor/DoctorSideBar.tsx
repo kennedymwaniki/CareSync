@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FiBell, FiSettings, FiChevronDown } from "react-icons/fi";
+import logo from "../../assets/carepulse logo_2.png";
 // Import React Icons
 
 interface SidebarProps {
@@ -23,7 +24,7 @@ const DoctorSideBar = ({ navigation }: SidebarProps) => {
       <div>
         <div className="flex items-center justify-center py-4 t">
           <NavLink to="/" className="text-black font-bold text-xl">
-            CareSync+
+            <img src={logo} alt="logo" />
           </NavLink>
         </div>
         <nav className="mt-5 px-2 text-nowrap">

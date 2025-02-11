@@ -16,6 +16,10 @@ import DoctorDashboard from "./features/doctor/DoctorDashboard";
 import DoctorSummary from "./features/doctor/DoctorSummary";
 import DoctorNotes from "./features/doctor/DoctorNotes";
 import PatientsListTable from "./features/doctor/PatientsListTable";
+import CareProvidersSummary from "./features/care providers/CareProvidersSummary";
+import CareGiversDashBoard from "./features/care providers/CareGiversDashBoard";
+import CareGiverReports from "./features/care providers/CareGiverReports";
+import MedicationManagement from "./features/care providers/MedicationManagement";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +38,7 @@ const router = createBrowserRouter([
     path: "/admin",
     element: <Dashboard />,
   },
+  // doctor routes
   {
     path: "/doctor",
     element: <DoctorDashboard />,
@@ -56,6 +61,38 @@ const router = createBrowserRouter([
       },
     ],
   },
+  // care provider routes
+  {
+    path: "/careProvider",
+    element: <CareGiversDashBoard />,
+    children: [
+      {
+        index: true,
+        element: <CareProvidersSummary />,
+      },
+      {
+        path: "shared-notes",
+        element: <DoctorNotes />,
+      },
+      {
+        path: "patients",
+        element: <PatientsListTable />,
+      },
+      {
+        path: "care-providers",
+        element: <CareProvidersTable />,
+      },
+      {
+        path: "caregiver-report",
+        element: <CareGiverReports />,
+      },
+      {
+        path: "medication-management",
+        element: <MedicationManagement />,
+      },
+    ],
+  },
+  // patient routes
   {
     path: "/patient",
     element: <PatientDashboard />,

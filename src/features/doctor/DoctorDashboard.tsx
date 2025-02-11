@@ -11,7 +11,7 @@ const patientNavigation = [
   { name: "Patients", icon: SlPeople, path: "patients" },
   { name: "Shared Notes", icon: LuStickyNote, path: "shared-notes" },
   { name: "Care Providers", icon: FaUserNurse, path: "care-providers" },
-  { name: "Reports & Analytics", icon: FileText, path: "reports" },
+  { name: "Reports & Analytics", icon: FileText, path: "doctor-reports" },
 ];
 
 const DoctorDashboard = () => {
