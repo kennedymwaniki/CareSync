@@ -4,7 +4,7 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-axios.interceptors.request.use(
+api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
