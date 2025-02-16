@@ -3,7 +3,8 @@ const api = axios.create({
   baseURL: "https://care.tech360.systems/v1",
   headers: { "Content-Type": "application/json" },
 });
-axios.interceptors.request.use(
+
+api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -15,4 +16,5 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
 export default api;
