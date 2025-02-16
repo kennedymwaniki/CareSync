@@ -1,75 +1,50 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from "react";
-
-type CareProvider = {
-  profile: string;
-  name: string;
-  role: string;
-  specialty: string;
-  active: boolean;
-  lastActivity: string;
-  openTime: string;
-  status: string;
-};
+import { useState, useEffect, Suspense } from "react";
+import { getAllCareGivers } from "../../apis/CareGiverServive";
+import { CareProvider } from "../../types/types";
+import Loader from "../../components/Loader";
 
 const CareProvidersTable = () => {
-  const initialData: CareProvider[] = [
-    {
-      profile: "👩‍⚕️",
-      name: "Dr. Alice Johnson",
-      role: "Doctor",
-      specialty: "Pediatrics",
-      active: true,
-      lastActivity: "2025-01-25",
-      openTime: "9:00 AM",
-      status: "Available",
-    },
-    {
-      profile: "👨‍⚕️",
-      name: "Nurse Bob Lee",
-      role: "Nurse",
-      specialty: "General",
-      active: true,
-      lastActivity: "2025-01-20",
-      openTime: "7:00 AM",
-      status: "Available",
-    },
-    {
-      profile: "👩‍⚕️",
-      name: "Dr. Clara Holmes",
-      role: "Doctor",
-      specialty: "Surgery",
-      active: false,
-      lastActivity: "2025-01-15",
-      openTime: "10:00 AM",
-      status: "Unavailable",
-    },
-    {
-      profile: "👨‍⚕️",
-      name: "Dr. David Smith",
-      role: "Doctor",
-      specialty: "Cardiology",
-      active: true,
-      lastActivity: "2025-01-10",
-      openTime: "8:00 AM",
-      status: "Available",
-    },
-    {
-      profile: "👩‍⚕️",
-      name: "Nurse Eva Green",
-      role: "Nurse",
-      specialty: "Maternity",
-      active: true,
-      lastActivity: "2025-01-18",
-      openTime: "6:00 AM",
-      status: "Available",
-    },
-  ];
-
-  const [data, _setData] = useState<CareProvider[]>(initialData);
+  const [data, setData] = useState<CareProvider[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [filterRole, setFilterRole] = useState<string | null>(null);
   const [filterActive, setFilterActive] = useState<boolean | null>(null);
+
+  const fetchCareGivers = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await getAllCareGivers();
+
+      const transformedData: CareProvider[] = response.data.map(
+        (caregiver) => ({
+          profile: caregiver.profile.avatar || "👩‍⚕️",
+          name: caregiver.name,
+          role: caregiver.role,
+          specialty: caregiver.user_role.specialization || "General",
+          active: caregiver.user_role.active === "1",
+          lastActivity: caregiver.user_role.last_activity || "No activity",
+          openTime: "9:00 AM",
+          status:
+            caregiver.user_role.active === "1" ? "Available" : "Unavailable",
+        })
+      );
+
+      setData(transformedData);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch care providers"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCareGivers();
+  }, []);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -155,47 +130,73 @@ const CareProvidersTable = () => {
           className="ml-auto px-4 py-2 border rounded-md"
         />
       </div>
-      {filteredData.length > 0 ? (
-        <table className="min-w-full">
-          <thead>
-            <tr className="text-sm  text-nowrap border-b-2">
-              <th className=" px-4 py-2">Profile</th>
-              <th className=" px-4 py-2">Name</th>
-              <th className=" px-4 py-2">Role</th>
-              <th className=" px-4 py-2">Specialty</th>
-              <th className=" px-4 py-2">Active</th>
-              <th className=" px-4 py-2">Last Activity</th>
-              <th className=" px-4 py-2">Open Time</th>
-              <th className=" px-4 py-2">Status</th>
-            </tr>
-          </thead>
+      <table className="min-w-full">
+        <thead>
+          <tr className="text-sm text-nowrap border-b-2">
+            <th className="px-4 py-2">Profile</th>
+            <th className="px-4 py-2">Name</th>
+            <th className="px-4 py-2">Role</th>
+            <th className="px-4 py-2">Specialty</th>
+            <th className="px-4 py-2">Active</th>
+            <th className="px-4 py-2">Last Activity</th>
+            <th className="px-4 py-2">Open Time</th>
+            <th className="px-4 py-2">Status</th>
+          </tr>
+        </thead>
+        <Suspense fallback={<Loader />}>
           <tbody>
-            {filteredData.map((provider, index) => (
-              <tr key={index} className="hover:bg-gray-50 text-sm text-nowrap">
-                <td className="px-4 py-2">
-                  <img
-                    src={provider.profile}
-                    alt={provider.name}
-                    className="w-8 h-8 rounded-full"
-                  />
+            {isLoading ? (
+              <tr>
+                <td colSpan={8} className="text-center py-4">
+                  <Loader />
                 </td>
-                <td className=" px-4 py-2">{provider.name}</td>
-                <td className=" px-4 py-2">{provider.role}</td>
-                <td className=" px-4 py-2">{provider.specialty}</td>
-                <td className=" px-4 py-2">{provider.active ? "Yes" : "No"}</td>
-                <td className=" px-4 py-2">{provider.lastActivity}</td>
-                <td className=" px-4 py-2">{provider.openTime}</td>
-                <td className=" px-4 py-2">{provider.status}</td>
               </tr>
-            ))}
+            ) : error ? (
+              <tr>
+                <td colSpan={8} className="text-center py-4 text-red-500">
+                  Error: {error}
+                  <button
+                    onClick={fetchCareGivers}
+                    className="ml-4 px-4 py-2 bg-[#454BE7] text-white rounded-md"
+                  >
+                    Retry
+                  </button>
+                </td>
+              </tr>
+            ) : filteredData.length > 0 ? (
+              filteredData.map((provider, index) => (
+                <tr
+                  key={index}
+                  className="hover:bg-gray-50 text-sm text-nowrap"
+                >
+                  <td className="px-4 py-2">
+                    <img
+                      src={provider.profile}
+                      alt={provider.name}
+                      className="w-8 h-8 rounded-full"
+                    />
+                  </td>
+                  <td className="px-4 py-2">{provider.name}</td>
+                  <td className="px-4 py-2">{provider.role}</td>
+                  <td className="px-4 py-2">{provider.specialty}</td>
+                  <td className="px-4 py-2">
+                    {provider.active ? "Yes" : "No"}
+                  </td>
+                  <td className="px-4 py-2">{provider.lastActivity}</td>
+                  <td className="px-4 py-2">{provider.openTime}</td>
+                  <td className="px-4 py-2">{provider.status}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={8} className="text-center py-4">
+                  There is no data to display here!
+                </td>
+              </tr>
+            )}
           </tbody>
-        </table>
-      ) : (
-        <div className="flex flex-col items-center justify-center mt-10">
-          <img src="/no-data.png" alt="No data" className="w-48 h-48 mb-4" />
-          <p className="text-gray-500">There is no data to display here!</p>
-        </div>
-      )}
+        </Suspense>
+      </table>
     </div>
   );
 };

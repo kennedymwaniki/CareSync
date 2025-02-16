@@ -49,8 +49,6 @@ export interface PatientDataResponse {
   health_vitals: HealthVital[];
 }
 
-import api from "../../axios";
-
 interface Profile {
   id: number;
   user_id: number;
@@ -73,7 +71,7 @@ interface UserRole {
   active: string;
 }
 
-interface CareGiver {
+export interface CareGiver {
   id: number;
   name: string;
   email: string;
@@ -90,7 +88,13 @@ export interface CareGiverResponse {
   total: number;
 }
 
-export const getAllCareGivers = async (): Promise<CareGiverResponse> => {
-  const response = await api.get<CareGiverResponse>("/care-givers/fetch-all");
-  return response.data;
+export type CareProvider = {
+  profile: string; // This will be derived from user_role.avatar
+  name: string;
+  role: string;
+  specialty: string; // This will be derived from user_role.specialization
+  active: boolean;
+  lastActivity: string;
+  openTime: string;
+  status: string;
 };
