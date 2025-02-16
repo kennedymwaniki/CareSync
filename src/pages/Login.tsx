@@ -71,7 +71,7 @@ const Login = () => {
         return;
       }
       dispatch(loginUser({ user: response.user, token: response.token }));
-      navigate("/admin");
+      navigate("/patient");
     } catch (err) {
       console.error("Invalid email or password", err);
     } finally {
