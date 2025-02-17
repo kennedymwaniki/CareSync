@@ -76,9 +76,9 @@ const MedicationsTable = () => {
   }
 
   const rowsPerPage = 5;
-  const _today = isToday(new Date())
-    ? new Date().toISOString().split("T")[0]
-    : "";
+  // const _today = isToday(new Date())
+  //   ? new Date().toISOString().split("T")[0]
+  //   : "";
 
   const filteredMedications = medications.filter((med) => {
     if (filter === "Today") {
