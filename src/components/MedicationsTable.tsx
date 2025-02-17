@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { FiFilter } from "react-icons/fi";
 import Nodata from "../assets/medication baner.png";
-import { isToday, parseISO, isWithinInterval } from "date-fns";
+import { parseISO, isWithinInterval } from "date-fns";
 import { useSelector } from "react-redux";
 import { addDays, format } from "date-fns";
 import { ApiResponse, MedicationResponse } from "../types/types";
@@ -36,32 +35,35 @@ const MedicationsTable = () => {
     return format(addDays(date, days), "yyyy-MM-dd");
   };
 
-  const getMedications = async (patientId: number) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response: ApiResponse = await getPatientMedication(patientId);
-      if (!response.data) {
-        throw new Error("No data received from server");
-      }
-      // end date for each medication
-      const enhancedMedications = response.data.map((med) => ({
-        ...med,
-        calculatedEndDate: calculateEndDate(med.prescribed_date, med.duration),
-      }));
-      setMedications(enhancedMedications);
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Failed to fetch patient medications"
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const getMedications = async (patientId: number) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response: ApiResponse = await getPatientMedication(patientId);
+        if (!response.data) {
+          throw new Error("No data received from server");
+        }
+        // end date for each medication
+        const enhancedMedications = response.data.map((med) => ({
+          ...med,
+          calculatedEndDate: calculateEndDate(
+            med.prescribed_date,
+            med.duration
+          ),
+        }));
+        setMedications(enhancedMedications);
+      } catch (error) {
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch patient msedications"
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     if (patientId) {
       getMedications(patientId);
     }
