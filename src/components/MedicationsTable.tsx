@@ -1,154 +1,99 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiFilter } from "react-icons/fi";
 import Nodata from "../assets/medication baner.png";
-import { isToday } from "date-fns";
-import api from "../../axios";
-interface Medication {
-  id: number;
-  name: string;
-  dosage: string;
-  frequency: string;
-  startDate: string;
-  endDate: string;
-  prescriber: string;
-  instructions: string;
-  status: string;
-  notes: string;
+import { isToday, parseISO, isWithinInterval } from "date-fns";
+import { useSelector } from "react-redux";
+import { addDays, format } from "date-fns";
+import { ApiResponse, MedicationResponse } from "../types/types";
+
+import { RootState } from "../app/store";
+import { getPatientMedication } from "../apis/PatientService";
+
+interface EnhancedMedication extends MedicationResponse {
+  calculatedEndDate: string;
 }
 
 const MedicationsTable = () => {
-  // Dummy data for medications
-  const dummyMedications: Medication[] = [
-    {
-      id: 1,
-      name: "Paracetamol",
-      dosage: "500mg",
-      frequency: "Twice a day",
-      startDate: "2025-01-15",
-      endDate: "2025-01-20",
-      prescriber: "Dr. Smith",
-      instructions: "After meals",
-      status: "Active",
-      notes: "N/A",
-    },
-    {
-      id: 2,
-      name: "Amoxicillin",
-      dosage: "250mg",
-      frequency: "Three times a day",
-      startDate: "2025-01-16",
-      endDate: "2025-01-19",
-      prescriber: "Dr. Brown",
-      instructions: "Before meals",
-      status: "Active",
-      notes: "Take with water",
-    },
-    {
-      id: 3,
-      name: "Ibuprofen",
-      dosage: "400mg",
-      frequency: "Once a day",
-      startDate: "2025-01-15",
-      endDate: "2025-01-18",
-      prescriber: "Dr. Adams",
-      instructions: "After meals",
-      status: "Active",
-      notes: "N/A",
-    },
-    {
-      id: 4,
-      name: "Aspirin",
-      dosage: "100mg",
-      frequency: "Twice a day",
-      startDate: "2025-01-15",
-      endDate: "2025-01-18",
-      prescriber: "Dr. Carter",
-      instructions: "Before meals",
-      status: "Active",
-      notes: "Avoid alcohol",
-    },
-    {
-      id: 5,
-      name: "Metformin",
-      dosage: "500mg",
-      frequency: "Once a day",
-      startDate: "2025-01-15",
-      endDate: "2025-01-20",
-      prescriber: "Dr. Lee",
-      instructions: "After meals",
-      status: "Active",
-      notes: "Monitor blood sugar",
-    },
-    {
-      id: 6,
-      name: "Ciprofloxacin",
-      dosage: "500mg",
-      frequency: "Twice a day",
-      startDate: "2025-01-18",
-      endDate: "2025-01-19",
-      prescriber: "Dr. Johnson",
-      instructions: "Before meals",
-      status: "Today",
-      notes: "Avoid sunlight",
-    },
-    {
-      id: 7,
-      name: "Ciprofloxacin",
-      dosage: "500mg",
-      frequency: "Twice a day",
-      startDate: "2025-01-18",
-      endDate: "2025-01-19",
-      prescriber: "Dr. Johnson",
-      instructions: "Before meals",
-      status: "Today",
-      notes: "Avoid sunlight",
-    },
-    {
-      id: 8,
-      name: "Ciprofloxacin",
-      dosage: "500mg",
-      frequency: "Twice a day",
-      startDate: "2025-01-18",
-      endDate: "2025-01-19",
-      prescriber: "Dr. Johnson",
-      instructions: "Before meals",
-      status: "Today",
-      notes: "Avoid sunlight",
-    },
-  ];
-
-  const [medications, setMedications] =
-    useState<Medication[]>(dummyMedications);
+  const [medications, setMedications] = useState<EnhancedMedication[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setIsLoading] = useState<boolean>(false);
   const [filter, setFilter] = useState<"All" | "Today">("All");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const getMedications = async (): Promise<void> => {
+  const patient = useSelector((state: RootState) => state.auth.user);
+  console.log(patient);
+  // ! this is for testing the 422 error restore the origina ID
+  const patientId = patient?.id || 1;
+  console.log(patientId);
+
+  const calculateEndDate = (startDate: string, duration: string): string => {
+    const durationMatch = duration.match(/(\d+)\s*days?/i);
+    if (!durationMatch) return "";
+
+    const days = parseInt(durationMatch[1]);
+    const date = parseISO(startDate);
+    return format(addDays(date, days), "yyyy-MM-dd");
+  };
+
+  const getMedications = async (patientId: number) => {
+    setIsLoading(true);
+    setError(null);
     try {
-      const response = await api.get("medication");
-      const data: Medication[] = response.data;
-      setMedications(data);
+      const response: ApiResponse = await getPatientMedication(patientId);
+      if (!response.data) {
+        throw new Error("No data received from server");
+      }
+      // end date for each medication
+      const enhancedMedications = response.data.map((med) => ({
+        ...med,
+        calculatedEndDate: calculateEndDate(med.prescribed_date, med.duration),
+      }));
+      setMedications(enhancedMedications);
     } catch (error) {
-      console.log(error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch patient medications"
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  getMedications();
+  useEffect(() => {
+    if (patientId) {
+      getMedications(patientId);
+    }
+  }, [patientId]);
+
+  if (loading) {
+    return <div>Loading Medication...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">Error: {error}</div>;
+  }
 
   const rowsPerPage = 5;
-  const today = isToday(new Date())
+  const _today = isToday(new Date())
     ? new Date().toISOString().split("T")[0]
     : "";
 
-  // ! fix this part its not working
   const filteredMedications = medications.filter((med) => {
     if (filter === "Today") {
-      return med.startDate <= today && med.endDate >= today;
+      const startDate = parseISO(med.prescribed_date);
+      const endDate = parseISO(med.calculatedEndDate);
+      const today = new Date();
+
+      return isWithinInterval(today, {
+        start: startDate,
+        end: endDate,
+      });
     }
     return true;
   });
 
-  // Pa
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = filteredMedications.slice(
@@ -157,6 +102,8 @@ const MedicationsTable = () => {
   );
 
   const totalPages = Math.ceil(filteredMedications.length / rowsPerPage);
+
+  // Helper function to calculate end date
 
   return (
     <div className="p-6">
@@ -193,15 +140,21 @@ const MedicationsTable = () => {
                   className="hover:bg-gray-50 text-sm text-nowrap"
                 >
                   <td className="px-4 py-2 text-center">{med.id}</td>
-                  <td className="px-4 py-2">{med.name}</td>
-                  <td className="px-4 py-2">{med.dosage}</td>
+                  <td className="px-4 py-2">{med.medication_name}</td>
+                  <td className="px-4 py-2">{`${med.dosage_quantity} ${med.dosage_strength}`}</td>
                   <td className="px-4 py-2">{med.frequency}</td>
-                  <td className="px-4 py-2">{med.startDate}</td>
-                  <td className="px-4 py-2">{med.endDate}</td>
-                  <td className="px-4 py-2">{med.prescriber}</td>
-                  <td className="px-4 py-2">{med.instructions}</td>
-                  <td className="px-4 py-2">{med.status}</td>
-                  <td className="px-4 py-2">{med.notes}</td>
+                  <td className="px-4 py-2">
+                    {format(parseISO(med.prescribed_date), "yyyy-MM-dd")}
+                  </td>
+                  <td className="px-4 py-2">{med.calculatedEndDate}</td>
+                  <td className="px-4 py-2">{med.doctor.name}</td>
+                  <td className="px-4 py-2">{`${med.route.name} - ${med.form.name}`}</td>
+                  <td className="px-4 py-2">
+                    {med.active ? "Active" : "Inactive"}
+                  </td>
+                  <td className="px-4 py-2">
+                    {/* Add your action buttons here */}
+                  </td>
                 </tr>
               ))
             ) : (

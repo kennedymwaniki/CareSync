@@ -1,11 +1,8 @@
 export interface User {
-  token: string;
-  user: {
-    id: string;
-    role: string;
-    name: string;
-    email: string;
-  };
+  id: number;
+  role: string;
+  name: string;
+  email: string;
 }
 
 export interface AuthState {
@@ -89,12 +86,103 @@ export interface CareGiverResponse {
 }
 
 export type CareProvider = {
-  profile: string; // This will be derived from user_role.avatar
+  profile: string;
   name: string;
   role: string;
-  specialty: string; // This will be derived from user_role.specialization
+  specialty: string;
   active: boolean;
   lastActivity: string;
   openTime: string;
   status: string;
 };
+
+// Add these types if not already present
+export interface Vital {
+  name: string;
+  value: string;
+  unit: string;
+  isNormal: boolean;
+}
+
+export interface VitalsResponse {
+  error: boolean;
+  patient_id: string;
+  vitals: Vital[];
+}
+
+export interface Vital {
+  name: string;
+  value: string;
+  unit: string;
+  isNormal: boolean;
+}
+
+export interface VitalsResponse {
+  error: boolean;
+  patient_id: string;
+  vitals: Vital[];
+}
+
+export interface Patient {
+  patient_id: number;
+  name: string;
+  email: string;
+  avatar: string | null;
+}
+
+export interface Doctor {
+  doctor_id: number;
+  name: string;
+  email: string;
+  avatar: string | null;
+}
+
+export interface Form {
+  id: number;
+  name: string;
+  patient_id: number | null;
+}
+
+export interface Route {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export interface Diagnosis {
+  id: number;
+  patient_id: number;
+  diagnosis_name: string;
+  description: string | null;
+  symptoms: string | null;
+  date_diagnosed: string;
+  doctor_id: number;
+}
+
+export interface MedicationResponse {
+  id: number;
+  patient: Patient;
+  medication_name: string;
+  dosage_quantity: string;
+  dosage_strength: string;
+  form: Form;
+  route: Route;
+  frequency: string;
+  duration: string;
+  prescribed_date: string;
+  doctor: Doctor;
+  caregiver: null | number;
+  stock: number;
+  active: number;
+  diagnosis: Diagnosis;
+}
+
+export interface ApiResponse {
+  data: MedicationResponse[];
+  pagination: {
+    current_page: number;
+    total_pages: number;
+    total_items: number;
+    per_page: number;
+  };
+}

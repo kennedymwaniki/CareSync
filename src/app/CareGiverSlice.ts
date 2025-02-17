@@ -42,9 +42,4 @@ export const careProvidersApi = createApi({
   }),
 });
 
-export const {
-  useGetAllCareProvidersQuery,
-  useAssignPatientDoctorMutation,
-  useAssignPatientCareGiverMutation,
-  useRemovePatientCareGiverMutation,
-} = careProvidersApi;
+export default careProvidersApi;

@@ -14,14 +14,42 @@ export const getPatientData = async (patientId: number) => {
 
 // get patient vitals
 export const getPatientVitals = async (patientId: number) => {
-  const patientVitals = await api.get(`/health-vitals/${patientId}`);
-  return patientVitals;
+  try {
+    const patientVitals = await api.get(`/health-vitals/${patientId}`);
+    if (!patientVitals.data) {
+      throw new Error("No data received from server");
+    }
+    return patientVitals.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch patient vitals: ${error.message}`);
+    }
+    throw new Error(
+      "An unexpected error occurred while fetching patient vitals"
+    );
+  }
 };
 
 // get patient medication
-export const getPatientMedication = async (patientId: number) => {
-  const patientMedication = await api.get(`/medication-schedules/${patientId}`);
-  return patientMedication;
+export const getPatientMedication = async (patient_id: number) => {
+  try {
+    const payload = { patient_id: patient_id };
+    console.log("Request payload:", payload);
+    const Medication = await api.post("/medications/fetch/by-patient", {
+      patient_id: patient_id,
+    });
+    if (!Medication.data) {
+      throw new Error("No data received from server");
+    }
+    return Medication.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch patient medication: ${error.message}`);
+    }
+    throw new Error(
+      "An unexpected error occurred while fetching patient medication"
+    );
+  }
 };
 
 // fetch patient care providers
