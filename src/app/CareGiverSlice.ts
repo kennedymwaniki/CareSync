@@ -8,7 +8,7 @@ interface AssignCareProviderRequest {
 
 export const careProvidersApi = createApi({
   reducerPath: "careProvidersApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "YOUR_BASE_URL" }), // Replace with your API base URL
+  baseQuery: fetchBaseQuery({ baseUrl: "https://care.tech360.systems/v1" }), // Replace with your API base URL
   tagTypes: ["CareProviders"],
   endpoints: (builder) => ({
     getAllCareProviders: builder.query<CareGiverResponse, void>({
