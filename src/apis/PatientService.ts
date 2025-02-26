@@ -57,3 +57,20 @@ export const getPatientCareProviders = async (patientId: number) => {
   );
   return careProviders;
 };
+// get patient diagnosis
+export const getPatientDiagnosis = async (patientId: number) => {
+  try {
+    const response = await api.get(`/diagnosis/patient/${patientId}`);
+    if (!response.data) {
+      throw new Error("No data received from server");
+    }
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch patient diagnosis: ${error.message}`);
+    }
+    throw new Error(
+      "An unexpected error occurred while fetching patient diagnosis"
+    );
+  }
+};

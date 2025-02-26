@@ -186,3 +186,21 @@ export interface ApiResponse {
     per_page: number;
   };
 }
+
+export interface DiagnosisResponse {
+  id: number;
+  diagnosis_name: string;
+  description: string | null;
+  date_diagnosed: string;
+  patient: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  doctor: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  medication_counts: number;
+}

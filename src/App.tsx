@@ -20,6 +20,9 @@ import CareProvidersSummary from "./features/care providers/CareProvidersSummary
 import CareGiversDashBoard from "./features/care providers/CareGiversDashBoard";
 import CareGiverReports from "./features/care providers/CareGiverReports";
 import MedicationManagement from "./features/care providers/MedicationManagement";
+import PatientDiagnosis from "./features/patient/PatientDiagnosis";
+import PatientSideEffects from "./features/patient/PatientSideEffects";
+import MedicationsTable from "./components/MedicationsTable";
 
 const router = createBrowserRouter([
   {
@@ -104,6 +107,20 @@ const router = createBrowserRouter([
       {
         path: "medication",
         element: <Medication />,
+        children: [
+          {
+            index: true,
+            element: <MedicationsTable />,
+          },
+          {
+            path: "diagnosis",
+            element: <PatientDiagnosis />,
+          },
+          {
+            path: "side-effects",
+            element: <PatientSideEffects />,
+          },
+        ],
       },
       {
         path: "patient-reminder",
