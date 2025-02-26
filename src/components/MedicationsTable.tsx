@@ -24,11 +24,8 @@ const MedicationsTable = () => {
   //  get loggedin user from redux store
   const patient = useSelector((state: RootState) => state.auth.user);
 
-  console.log("Patient from Redux store:", patient);
-
   // if we dont have a patient id we use id no. 2 for testing
   const patientId = patient?.id ?? 2;
-  console.log("Patient ID being used:", patientId, typeof patientId);
 
   const calculateEndDate = (startDate: string, duration: string): string => {
     const durationMatch = duration.match(/(\d+)\s*days?/i);
