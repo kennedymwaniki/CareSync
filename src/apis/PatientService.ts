@@ -35,9 +35,7 @@ export const getPatientMedication = async (patient_id: number) => {
   try {
     const payload = { patient_id: patient_id };
     console.log("Request payload:", payload);
-    const Medication = await api.post("/medications/fetch/by-patient", {
-      patient_id: patient_id,
-    });
+    const Medication = await api.post("/medications/fetch/by-patient", payload);
     if (!Medication.data) {
       throw new Error("No data received from server");
     }

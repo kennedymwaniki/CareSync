@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import api from "../../axios";
 import NavBar from "../components/NavBar";
+import { redirect } from "react-router-dom";
 
 type FormValues = {
   email: string;
@@ -15,6 +16,7 @@ const Register = () => {
   const { register, handleSubmit,formState: { errors } } = useForm<FormValues>();
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
+  const role = "Patient";
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (data.password !== data.confirmPassword) {
@@ -30,11 +32,13 @@ const Register = () => {
         email: data.email,
         password: data.password,
         name: data.name,
+        role: role,
         password_confirmation: data.confirmPassword,
       });
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         setNotification("Registration successful!");
+        redirect("/login");
       } else {
         setNotification("Registration failed. Please try again.");
       }

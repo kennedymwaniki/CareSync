@@ -8,6 +8,7 @@ import { ApiResponse, MedicationResponse } from "../types/types";
 
 import { RootState } from "../app/store";
 import { getPatientMedication } from "../apis/PatientService";
+import Loader from "./Loader";
 
 interface EnhancedMedication extends MedicationResponse {
   calculatedEndDate: string;
@@ -20,11 +21,14 @@ const MedicationsTable = () => {
   const [filter, setFilter] = useState<"All" | "Today">("All");
   const [currentPage, setCurrentPage] = useState(1);
 
+  //  get loggedin user from redux store
   const patient = useSelector((state: RootState) => state.auth.user);
-  console.log(patient);
-  // ! this is for testing the 422 error restore the origina ID
-  const patientId = patient?.id || 1;
-  console.log(patientId);
+
+  console.log("Patient from Redux store:", patient);
+
+  // if we dont have a patient id we use id no. 2 for testing
+  const patientId = patient?.id ?? 2;
+  console.log("Patient ID being used:", patientId, typeof patientId);
 
   const calculateEndDate = (startDate: string, duration: string): string => {
     const durationMatch = duration.match(/(\d+)\s*days?/i);
@@ -57,7 +61,7 @@ const MedicationsTable = () => {
         setError(
           error instanceof Error
             ? error.message
-            : "Failed to fetch patient msedications"
+            : "Failed to fetch patient medications"
         );
       } finally {
         setIsLoading(false);
@@ -69,18 +73,7 @@ const MedicationsTable = () => {
     }
   }, [patientId]);
 
-  if (loading) {
-    return <div>Loading Medication...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500">Error: {error}</div>;
-  }
-
   const rowsPerPage = 5;
-  // const _today = isToday(new Date())
-  //   ? new Date().toISOString().split("T")[0]
-  //   : "";
 
   const filteredMedications = medications.filter((med) => {
     if (filter === "Today") {
@@ -105,7 +98,56 @@ const MedicationsTable = () => {
 
   const totalPages = Math.ceil(filteredMedications.length / rowsPerPage);
 
-  // Helper function to calculate end date
+  // Render table body based on loading, error and data states
+  const renderTableBody = () => {
+    if (loading) {
+      return (
+        <tr>
+          <td colSpan={15} className="text-center py-4">
+            <Loader />
+          </td>
+        </tr>
+      );
+    }
+
+    if (error) {
+      return (
+        <tr>
+          <td colSpan={10} className="text-center py-4">
+            <p className="text-red-500">Error: {error}</p>
+          </td>
+        </tr>
+      );
+    }
+
+    if (currentRows.length === 0) {
+      return (
+        <tr>
+          <td colSpan={10} className="text-center py-4">
+            <img src={Nodata} alt="No Data" className="mx-auto w-80 h-80" />
+            <p className="mt-4 text-gray-500">No medications available</p>
+          </td>
+        </tr>
+      );
+    }
+
+    return currentRows.map((med) => (
+      <tr key={med.id} className="hover:bg-gray-50 text-sm text-nowrap">
+        <td className="px-4 py-2 text-center">{med.id}</td>
+        <td className="px-4 py-2">{med.medication_name}</td>
+        <td className="px-4 py-2">{`${med.dosage_quantity} ${med.dosage_strength}`}</td>
+        <td className="px-4 py-2">{med.frequency}</td>
+        <td className="px-4 py-2">
+          {format(parseISO(med.prescribed_date), "yyyy-MM-dd")}
+        </td>
+        <td className="px-4 py-2">{med.calculatedEndDate}</td>
+        <td className="px-4 py-2">{med.doctor.name}</td>
+        <td className="px-4 py-2">{`${med.route.name} - ${med.form.name}`}</td>
+        <td className="px-4 py-2">{med.active ? "Active" : "Inactive"}</td>
+        <td className="px-4 py-2">{/* Add your action buttons here */}</td>
+      </tr>
+    ));
+  };
 
   return (
     <div className="p-6">
@@ -134,44 +176,7 @@ const MedicationsTable = () => {
               <th className="px-4 py-2 ">Actions</th>
             </tr>
           </thead>
-          <tbody>
-            {currentRows.length > 0 ? (
-              currentRows.map((med) => (
-                <tr
-                  key={med.id}
-                  className="hover:bg-gray-50 text-sm text-nowrap"
-                >
-                  <td className="px-4 py-2 text-center">{med.id}</td>
-                  <td className="px-4 py-2">{med.medication_name}</td>
-                  <td className="px-4 py-2">{`${med.dosage_quantity} ${med.dosage_strength}`}</td>
-                  <td className="px-4 py-2">{med.frequency}</td>
-                  <td className="px-4 py-2">
-                    {format(parseISO(med.prescribed_date), "yyyy-MM-dd")}
-                  </td>
-                  <td className="px-4 py-2">{med.calculatedEndDate}</td>
-                  <td className="px-4 py-2">{med.doctor.name}</td>
-                  <td className="px-4 py-2">{`${med.route.name} - ${med.form.name}`}</td>
-                  <td className="px-4 py-2">
-                    {med.active ? "Active" : "Inactive"}
-                  </td>
-                  <td className="px-4 py-2">
-                    {/* Add your action buttons here */}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={10} className="text-center py-4">
-                  <img
-                    src={Nodata}
-                    alt="No Data"
-                    className="mx-auto w-80 h-80"
-                  />
-                  <p className="mt-4 text-gray-500">No medications available</p>
-                </td>
-              </tr>
-            )}
-          </tbody>
+          <tbody>{renderTableBody()}</tbody>
         </table>
       </div>
 

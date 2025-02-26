@@ -25,3 +25,25 @@ export const removePatientCareGiver = async(patientId: number, careGiverId: numb
     const response = await api.delete(`/care-providers/remove-caregiver,${patientId}${careGiverId}`);
     return response;
 }
+
+// fetch doctor's patient
+
+export const getDoctorPatients = async (doctorId: number) => {
+  try {
+    const doctorPatients = await api.post(
+      "/care-providers/fetch-doctor-patient",
+      { doctorId: doctorId }
+    );
+    if (!doctorPatients.data) {
+      throw new Error("No data received from server");
+    }
+    return doctorPatients.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error("Failed to fetch doctor patients: ${error.message}");
+    }
+    throw new Error(
+      "An unexpected error occurred while fetching doctor patients"
+    );
+  }
+};
