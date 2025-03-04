@@ -4,16 +4,55 @@ import TotalVitals from "../../components/TotalVitals";
 import RightSideBar from "../../components/RightSideBar";
 import SideEffects from "../../components/SideEffects";
 import CurrentMedication from "../../components/CurrentMedication";
+import { getPatientDiagnosis } from "../../apis/DiagnosisService";
+import { getPatientMedication } from "../../apis/PatientService";
+import { useEffect, useState } from "react";
+import { useProfile } from "../../hooks/UseProfile";
+
+interface Medication {
+  id: number;
+}
+
+interface Diagnosis {
+  // Add relevant diagnosis fields
+  id: number;
+  // ... other fields
+}
 
 const PatientSummary = () => {
+  const [medication, setMedication] = useState<Medication[]>([]);
+  const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
+  const { profile } = useProfile(); // Use the custom hook
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!profile?.patient?.id) return;
+
+      try {
+        const [medicationResponse, diagnosisResponse] = await Promise.all([
+          getPatientMedication(profile.patient.id),
+          getPatientDiagnosis(profile.patient.id),
+        ]);
+
+        // Assuming the responses contain a data property with the array
+        setMedication(medicationResponse.data || []);
+        setDiagnosis(diagnosisResponse.data || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [profile]);
+
   const data = {
     name: "Total Medication",
-    quantity: 30,
+    quantity: medication.length,
     color: "border-r-blue-700",
   };
   const data2 = {
     name: "Diagnosis",
-    quantity: 2,
+    quantity: diagnosis.length,
     color: "border-r-green-600",
   };
   const data3 = {

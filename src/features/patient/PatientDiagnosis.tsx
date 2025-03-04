@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { FiFilter } from "react-icons/fi";
 import Nodata from "../../assets/medication baner.png"; // Using the same no data image
 import { parseISO, format } from "date-fns";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
 import { getPatientDiagnosis } from "../../apis/PatientService";
 import Loader from "../../components/Loader";
+import { useProfile } from "../../hooks/UseProfile";
 
 interface Doctor {
   id: number;
@@ -55,10 +54,8 @@ const PatientDiagnosis = () => {
     date: "",
   });
 
-  const patient = useSelector((state: RootState) => state.auth.user);
-
-  // If we don't have a patient id we use id no. 2 for testing
-  const patientId: number = patient?.id ?? 2;
+  const { profile } = useProfile();
+  const patientId = profile?.patient.id;
 
   useEffect(() => {
     const getDiagnoses = async (patientId: number) => {

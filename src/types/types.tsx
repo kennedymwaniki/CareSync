@@ -204,3 +204,13 @@ export interface DiagnosisResponse {
   };
   medication_counts: number;
 }
+
+export interface Users {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  email_verified_at: string | null;
+  patient: Patient;
+  profile: Profile;
+}

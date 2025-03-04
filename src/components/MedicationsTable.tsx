@@ -2,13 +2,11 @@ import { useEffect, useState } from "react";
 import { FiFilter } from "react-icons/fi";
 import Nodata from "../assets/medication baner.png";
 import { parseISO, isWithinInterval } from "date-fns";
-import { useSelector } from "react-redux";
 import { addDays, format } from "date-fns";
 import { ApiResponse, MedicationResponse } from "../types/types";
-
-import { RootState } from "../app/store";
 import { getPatientMedication } from "../apis/PatientService";
 import Loader from "./Loader";
+import { useProfile } from "../hooks/UseProfile";
 
 interface EnhancedMedication extends MedicationResponse {
   calculatedEndDate: string;
@@ -21,11 +19,9 @@ const MedicationsTable = () => {
   const [filter, setFilter] = useState<"All" | "Today">("All");
   const [currentPage, setCurrentPage] = useState(1);
 
-  //  get loggedin user from redux store
-  const patient = useSelector((state: RootState) => state.auth.user);
-
-  // if we dont have a patient id we use id no. 2 for testing
-  const patientId = patient?.id ?? 2;
+  const { profile } = useProfile();
+  const patientId = profile?.patient.id;
+  console.log("This is the patient id", patientId);
 
   const calculateEndDate = (startDate: string, duration: string): string => {
     const durationMatch = duration.match(/(\d+)\s*days?/i);
@@ -40,6 +36,7 @@ const MedicationsTable = () => {
     const getMedications = async (patientId: number) => {
       setIsLoading(true);
       setError(null);
+      if (!patientId) return;
       try {
         const response: ApiResponse = await getPatientMedication(patientId);
         if (!response.data) {

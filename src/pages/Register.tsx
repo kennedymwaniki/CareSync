@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import api from "../../axios";
 import NavBar from "../components/NavBar";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Add this import
 
 type FormValues = {
   email: string;
@@ -12,6 +12,8 @@ type FormValues = {
 };
 
 const Register = () => {
+  const navigate = useNavigate(); // Add this hook
+
   // prettier-ignore
   const { register, handleSubmit,formState: { errors } } = useForm<FormValues>();
   const [loading, setLoading] = useState(false);
@@ -38,7 +40,7 @@ const Register = () => {
 
       if (response.status === 200) {
         setNotification("Registration successful!");
-        redirect("/login");
+        navigate("/login");
       } else {
         setNotification("Registration failed. Please try again.");
       }
