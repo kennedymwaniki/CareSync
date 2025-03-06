@@ -5,6 +5,8 @@ import { parseISO, isWithinInterval } from "date-fns";
 import { addDays, format } from "date-fns";
 import { ApiResponse, MedicationResponse } from "../types/types";
 import { getPatientMedication } from "../apis/PatientService";
+import { IoAddSharp } from "react-icons/io5";
+
 import Loader from "./Loader";
 import { useProfile } from "../hooks/UseProfile";
 
@@ -146,7 +148,15 @@ const MedicationsTable = () => {
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-semibold">Medications</h1>
+        <div className="flex items-center justify-between space-x-4">
+          <h1 className="text-xl font-semibold">Medications</h1>
+          <div>
+            <button className="text-white p-2 rounded-md bg-[#454BE7] flex items-center">
+              <IoAddSharp className="text-white" />
+              Add medication
+            </button>
+          </div>
+        </div>
         <button
           className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           onClick={() => setFilter(filter === "All" ? "Today" : "All")}

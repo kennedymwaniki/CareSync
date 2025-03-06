@@ -214,3 +214,41 @@ export interface Users {
   patient: Patient;
   profile: Profile;
 }
+
+// side
+interface Medication {
+  id: number;
+  medication_name: string;
+  dosage_quantity: string;
+  dosage_strength: string;
+  form_id: number;
+  route_id: number;
+  frequency: string;
+  duration: string;
+  prescribed_date: string;
+  active: number;
+}
+export interface SideEffect {
+  id: number;
+  medication_id: number;
+  patient_id: number;
+  datetime: string;
+  side_effect: string;
+  severity: "Mild" | "Moderate" | "Severe";
+  duration: string;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  medication: Medication;
+}
+
+export interface SideEffectApiResponse {
+  error: boolean;
+  data: SideEffect[];
+  pagination: {
+    current_page: number;
+    total_pages: number;
+    total_items: number;
+    per_page: number;
+  };
+}

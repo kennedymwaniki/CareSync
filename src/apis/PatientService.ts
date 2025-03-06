@@ -52,11 +52,22 @@ export const getPatientMedication = async (patient_id: number) => {
 
 // fetch patient care providers
 export const getPatientCareProviders = async (patientId: number) => {
-  const careProviders = await api.get(
-    `/care-providers/fetch-patient-caregivers/${patientId}`
-  );
-  return careProviders;
+  try {
+    const careProviders = await api.get(
+      `/care-providers/fetch-patient-caregivers/${patientId}`
+    );
+    if (!careProviders) {
+      throw new Error("no data found on the server");
+    }
+    return careProviders.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch Diagnosis: ${error.message}`);
+    }
+    throw new Error("An error occured while fetching the careProviders");
+  }
 };
+
 // get patient diagnosis
 export const getPatientDiagnosis = async (patientId: number) => {
   try {
@@ -71,6 +82,26 @@ export const getPatientDiagnosis = async (patientId: number) => {
     }
     throw new Error(
       "An unexpected error occurred while fetching patient diagnosis"
+    );
+  }
+};
+
+// get patient sideeffects
+
+export const getPatientSideEffects = async (patient_id: number) => {
+  try {
+    const payload = { patient_id: patient_id };
+    const sideEffects = await api.post("/side-effects/fetch", payload);
+    if (!sideEffects.data) {
+      throw new Error("no data received from the server");
+    }
+    return sideEffects.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fecth side effects `);
+    }
+    throw new Error(
+      "An unexpected error occured while fetching your sideeffects"
     );
   }
 };
