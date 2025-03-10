@@ -1,9 +1,8 @@
 import StatCards from "../../components/StatCards";
-import TotalVitals from "../../components/TotalVitals";
-import SideEffects from "../../components/SideEffects";
-import CurrentMedication from "../../components/CurrentMedication";
 import DoctorBanner from "./DoctoBanner";
 import DoctorRightSideBar from "./DoctorRightSideBar";
+import MissedMedicationChart from "./MissedMedicationChart";
+import LatestSideEffectsTable from "./LastSideeffectsTable";
 
 const DoctorSummary = () => {
   const data = {
@@ -28,8 +27,8 @@ const DoctorSummary = () => {
   };
 
   return (
-    <div className="flex justify-between ">
-      <div className="mx-auto p-2">
+    <div className="flex justify-between gap-1">
+      <div className="">
         <DoctorBanner />
 
         <p className="ml-2">This is the patient summary page</p>
@@ -41,11 +40,9 @@ const DoctorSummary = () => {
           <StatCards content={data4} />
         </div>
 
-        <h4 className="ml-2 mt-4 font-semibold">My health OverView</h4>
-        <TotalVitals />
-        <div className="grid grid-cols-2 gap-4">
-          <SideEffects />
-          <CurrentMedication />
+        <div className="grid space-y-4 mt-3">
+          <MissedMedicationChart />
+          <LatestSideEffectsTable />
         </div>
       </div>
 

@@ -23,6 +23,8 @@ import MedicationManagement from "./features/care providers/MedicationManagement
 import PatientDiagnosis from "./features/patient/PatientDiagnosis";
 import PatientSideEffects from "./features/patient/PatientSideEffects";
 import MedicationsTable from "./components/MedicationsTable";
+import DoctorReports from "./features/doctor/DoctorReports";
+import DoctorRegistration from "./features/doctor/DoctorRegistration";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +42,10 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <Dashboard />,
+  },
+  {
+    path: "/doc-reg",
+    element: <DoctorRegistration />,
   },
   // doctor routes
   {
@@ -61,6 +67,10 @@ const router = createBrowserRouter([
       {
         path: "care-providers",
         element: <CareProvidersTable />,
+      },
+      {
+        path: "doctor-reports",
+        element: <DoctorReports />,
       },
     ],
   },

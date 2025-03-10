@@ -1,10 +1,11 @@
+import MiniDateComponent from "./MiniDateComponent";
 import NotificationItem from "./NotificationItem";
 import Timelines from "./Timelines";
 
 function RightSideBar() {
   return (
     <div className="w-80 mt-2 p-[12px] rounded-lg border border-gray-200 h-screen overflow-x-auto">
-      <h1>Calender component to come......</h1>
+      <MiniDateComponent />
       <div className="space-y-[5px]">
         <h1>Notifications</h1>
         <div>
