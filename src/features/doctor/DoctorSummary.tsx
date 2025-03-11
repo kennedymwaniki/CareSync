@@ -2,7 +2,7 @@ import StatCards from "../../components/StatCards";
 import DoctorBanner from "./DoctoBanner";
 import DoctorRightSideBar from "./DoctorRightSideBar";
 import MissedMedicationChart from "./MissedMedicationChart";
-import LatestSideEffectsTable from "./LastSideeffectsTable";
+import LatestSideEffectsTable from "./LastSideEffectsTable";
 
 const DoctorSummary = () => {
   const data = {
