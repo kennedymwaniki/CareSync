@@ -7,8 +7,10 @@ import { ApiResponse, MedicationResponse } from "../types/types";
 import { getPatientMedication } from "../apis/PatientService";
 import { IoAddSharp } from "react-icons/io5";
 
-import Loader from "./Loader";
+import Loader from "../components/Loader";
 import { useProfile } from "../hooks/UseProfile";
+import Modal from "../components/Modal";
+import MedicationForm from "./MedicationForm";
 
 interface EnhancedMedication extends MedicationResponse {
   calculatedEndDate: string;
@@ -20,10 +22,13 @@ const MedicationsTable = () => {
   const [loading, setIsLoading] = useState<boolean>(false);
   const [filter, setFilter] = useState<"All" | "Today">("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { profile } = useProfile();
   const patientId = profile?.patient.id;
-  console.log("This is the patient id", patientId);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const calculateEndDate = (startDate: string, duration: string): string => {
     const durationMatch = duration.match(/(\d+)\s*days?/i);
@@ -151,7 +156,10 @@ const MedicationsTable = () => {
         <div className="flex items-center justify-between space-x-4">
           <h1 className="text-xl font-semibold">Medications</h1>
           <div>
-            <button className="text-white p-2 rounded-md bg-[#454BE7] flex items-center">
+            <button
+              className="text-white p-2 rounded-md bg-[#454BE7] flex items-center"
+              onClick={openModal}
+            >
               <IoAddSharp className="text-white" />
               Add medication
             </button>
@@ -201,6 +209,15 @@ const MedicationsTable = () => {
           ))}
         </div>
       )}
+
+      {/* Modal Component */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title="Add New Medication"
+      >
+        <MedicationForm />
+      </Modal>
     </div>
   );
 };
