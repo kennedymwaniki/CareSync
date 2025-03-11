@@ -3,7 +3,7 @@ import reminder from "../../assets/reminderbanner.png";
 import DateComponent from "../../components/DateComponent";
 const PatientReminders = () => {
   return (
-    <div className="flex w-full text-nowrap p-4">
+    <div className="flex w-full text-nowrap">
       <div className="p-2">
         <h4 className="mb-2">Reminder</h4>
         <div className="p-2 bg-[#EDF3FF] rounded-md flex justify-between">
