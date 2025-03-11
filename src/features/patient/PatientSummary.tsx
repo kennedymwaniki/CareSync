@@ -67,7 +67,7 @@ const PatientSummary = () => {
   };
 
   return (
-    <div className="flex justify-between gap-2">
+    <div className="flex justify-between gap-2 p-1">
       <div className="">
         <HomeBanner />
 

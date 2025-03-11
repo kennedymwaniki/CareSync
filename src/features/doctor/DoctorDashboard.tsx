@@ -16,9 +16,9 @@ const patientNavigation = [
 
 const DoctorDashboard = () => {
   return (
-    <div className="flex w-full gap-2 max-w-screen-xl">
+    <div className="flex w-full justify-between max-w-screen-xl">
       <DoctorSideBar navigation={patientNavigation} />
-      <main className="flex-1">
+      <main className="flex-1 px-2">
         <Outlet />
       </main>
     </div>

@@ -27,7 +27,7 @@ const DoctorSummary = () => {
   };
 
   return (
-    <div className="flex justify-between gap-1">
+    <div className="flex justify-between gap-1 mx-auto">
       <div className="">
         <DoctorBanner />
 
