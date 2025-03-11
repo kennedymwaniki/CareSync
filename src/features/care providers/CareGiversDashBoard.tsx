@@ -18,9 +18,9 @@ const patientNavigation = [
 
 const CareGiversDashBoard = () => {
   return (
-    <div className="flex">
+    <div className="flex w-full max-w-[1440px] mx-auto">
       <CareProviderSideBar navigation={patientNavigation} />
-      <main className="flex-1">
+      <main className="flex-1 min-w-0 px-2">
         <Outlet />
       </main>
     </div>
