@@ -1,7 +1,7 @@
 import banner from "../../assets/carepulse banner.png";
 const CareProviderBanner = () => {
   return (
-    <div className="m-1 flex items-center justify-between rounded-lg border border-gray-200">
+    <div className="m-1 flex items-center justify-between rounded-xl border border-gray-200">
       <div className="w-3/5 ml-1">
         <h1 className="text-3xl font-bold mb-3">
           Hi <span className="text-[#454BE7]">John Mukeria</span>

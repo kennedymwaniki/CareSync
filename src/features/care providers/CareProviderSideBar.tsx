@@ -19,7 +19,7 @@ const CareProviderSideBar = ({ navigation }: SidebarProps) => {
   };
 
   return (
-    <aside className="w-[250px] bg-white shadow-xl min-h-screen flex flex-col border-r">
+    <aside className="w-[225px] bg-white shadow-xl min-h-screen flex flex-col border-r">
       <div>
         <div className="flex items-center justify-center py-4 t">
           <NavLink to="/" className="text-black font-bold text-xl">
