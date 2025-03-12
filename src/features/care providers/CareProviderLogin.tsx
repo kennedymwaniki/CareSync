@@ -6,7 +6,7 @@ import { loginUser } from "../../apis/authSlice";
 import { Heart, Pill, Eye, EyeOff } from "lucide-react";
 import api from "../../../axios";
 import axios from "axios";
-import care from "../assets/carelogin.jpeg";
+import care from "../../assets/caregiver.png";
 
 type FormValues = {
   email: string;
@@ -21,7 +21,7 @@ type FormErrors = {
   password: string;
 };
 
-const DoctorLogin = () => {
+const CareProviderLogin = () => {
   const [loading, setIsloading] = useState(false);
   const [error, setError] = useState<FormErrors | null>(null);
   const [notification, setNotification] = useState<Notification | null>(null);
@@ -126,7 +126,7 @@ const DoctorLogin = () => {
 
         <div className="max-w-md mx-auto w-full">
           <h1 className="text-3xl font-bold text-[#454BE7] mb-2">
-            Welcome back Doctor,
+            Welcome back CareGiver
           </h1>
           <p className="text-gray-600 mb-8">
             Sign in to your CarePulse account
@@ -248,4 +248,4 @@ const DoctorLogin = () => {
   );
 };
 
-export default DoctorLogin;
+export default CareProviderLogin;

@@ -19,12 +19,14 @@ import PatientsListTable from "./features/doctor/PatientsListTable";
 import CareProvidersSummary from "./features/care providers/CareProvidersSummary";
 import CareGiversDashBoard from "./features/care providers/CareGiversDashBoard";
 import CareGiverReports from "./features/care providers/CareGiverReports";
-import MedicationManagement from "./features/care providers/MedicationManagement";
+
 import PatientDiagnosis from "./features/patient/PatientDiagnosis";
 import PatientSideEffects from "./features/patient/PatientSideEffects";
 import MedicationsTable from "./components/MedicationsTable";
 import DoctorReports from "./features/doctor/DoctorReports";
 import DoctorRegistration from "./features/doctor/DoctorRegistration";
+import CareProviderLogin from "./features/care providers/CareProviderLogin";
+import MedicationManagement from "./features/care providers/MedicationManagement";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +48,10 @@ const router = createBrowserRouter([
   {
     path: "/doc-reg",
     element: <DoctorRegistration />,
+  },
+  {
+    path: "/caregiver-login",
+    element: <CareProviderLogin />,
   },
   // doctor routes
   {
