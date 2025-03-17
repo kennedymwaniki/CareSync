@@ -7,6 +7,7 @@ import { Heart, Pill, Eye, EyeOff } from "lucide-react";
 import api from "../../axios";
 import axios from "axios";
 import care from "../assets/carelogin.jpeg";
+import { toast } from "sonner";
 
 type FormValues = {
   email: string;
@@ -55,22 +56,30 @@ const Login = () => {
   };
 
   const onSubmit = async (data: FormValues) => {
-    console.log(data);
     setIsloading(true);
 
     try {
       const response = await login(data);
-      if (response.error) {
-        if (response.errors) {
-          setError(response.errors);
-        }
-        setNotification({ message: response.message, type: "error" });
+
+      // Check for errors in response
+      if (!response || response.error) {
+        toast.error(response?.message || "Login failed");
+        setError(response?.errors || null);
+        setNotification(response.message);
         return;
       }
+
+      // Success case
       dispatch(loginUser({ user: response.user, token: response.token }));
+      toast.success("Login successful, welcome back!");
       navigate("/patient");
     } catch (err) {
-      console.error("Invalid email or password", err);
+      // Error handling
+      const errorMessage =
+        err instanceof Error ? err.message : "An unexpected error occurred";
+
+      toast.error(errorMessage);
+      console.error("Login error:", err);
     } finally {
       setIsloading(false);
     }

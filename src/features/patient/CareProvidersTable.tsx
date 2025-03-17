@@ -3,6 +3,7 @@ import { useState, useEffect, Suspense } from "react";
 import { getAllCareGivers } from "../../apis/CareGiverServive";
 import { CareProvider } from "../../types/types";
 import Loader from "../../components/Loader";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 const CareProvidersTable = () => {
   const [data, setData] = useState<CareProvider[]>([]);
@@ -141,6 +142,7 @@ const CareProvidersTable = () => {
             <th className="px-4 py-2">Last Activity</th>
             <th className="px-4 py-2">Open Time</th>
             <th className="px-4 py-2">Status</th>
+            <th className="px-4 py-2">Actions</th>
           </tr>
         </thead>
         <Suspense fallback={<Loader />}>
@@ -167,7 +169,9 @@ const CareProvidersTable = () => {
               filteredData.map((provider, index) => (
                 <tr
                   key={index}
-                  className="hover:bg-gray-50 text-sm text-nowrap"
+                  className={`text-sm hover:bg-gray-100 ${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                  }`}
                 >
                   <td className="px-4 py-2">
                     <img
@@ -185,6 +189,11 @@ const CareProvidersTable = () => {
                   <td className="px-4 py-2">{provider.lastActivity}</td>
                   <td className="px-4 py-2">{provider.openTime}</td>
                   <td className="px-4 py-2">{provider.status}</td>
+                  <td className="px-4 py-3">
+                    <button className="text-blue-500 hover:bg-blue-100 p-2 rounded-full">
+                      <BsThreeDotsVertical />
+                    </button>
+                  </td>
                 </tr>
               ))
             ) : (

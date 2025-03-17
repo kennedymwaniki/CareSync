@@ -1,4 +1,5 @@
 import api from "../../axios";
+import { toast } from "sonner";
 
 // get patient doctors
 export const getPatientDoctors = async (patientId: number) => {
@@ -37,6 +38,7 @@ export const getPatientMedication = async (patient_id: number) => {
     console.log("Request payload:", payload);
     const Medication = await api.post("/medications/fetch/by-patient", payload);
     if (!Medication.data) {
+      toast.error("No data received from server");
       throw new Error("No data received from server");
     }
     return Medication.data;
@@ -87,7 +89,6 @@ export const getPatientDiagnosis = async (patientId: number) => {
 };
 
 // get patient sideeffects
-
 export const getPatientSideEffects = async (patient_id: number) => {
   try {
     const payload = { patient_id: patient_id };
@@ -102,6 +103,104 @@ export const getPatientSideEffects = async (patient_id: number) => {
     }
     throw new Error(
       "An unexpected error occured while fetching your sideeffects"
+    );
+  }
+};
+
+// set patient doctor
+export const setPatientDoctor = async (doctorId: number, patientId: number) => {
+  try {
+    const payload = {
+      patientId: patientId,
+      doctorId: doctorId,
+    };
+    const doctor = await api.post("/care-providers/set-doctor", payload);
+    if (!doctor.data) {
+      throw new Error("no data received from the server");
+    }
+    return doctor.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to complete opration `);
+    }
+    throw new Error(
+      "An unexpected error occured while designating your selected doctor"
+    );
+  }
+};
+// set patient doctor
+export const removePatientDoctor = async (
+  doctorId: number,
+  patientId: number
+) => {
+  try {
+    const payload = {
+      patientId: patientId,
+      doctorId: doctorId,
+    };
+    const doctor = await api.post("/care-providers/set-doctor", payload);
+    if (!doctor.data) {
+      throw new Error("no data received from the server");
+    }
+    return doctor.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to complete doctor removal `);
+    }
+    throw new Error(
+      "An unexpected error occured while removing your selected doctor"
+    );
+  }
+};
+
+// set patient caregiver
+export const setPatientCareGiver = async (
+  caregiverId: number,
+  patientId: number,
+  role: string
+) => {
+  try {
+    const payload = {
+      patientId: patientId,
+      caregiverId: caregiverId,
+      role: role,
+    };
+    const doctor = await api.post("/care-providers/set-caregiver", payload);
+    if (!doctor.data) {
+      throw new Error("no data received from the server");
+    }
+    return doctor.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to complete designating your caregiver `);
+    }
+    throw new Error(
+      "An unexpected error occured setting your preferred caregiver"
+    );
+  }
+};
+
+// remove patient caregiver
+export const removePatientCareGiver = async (
+  caregiverId: number,
+  patientId: number
+) => {
+  try {
+    const payload = {
+      patientId: patientId,
+      caregiverId: caregiverId,
+    };
+    const doctor = await api.post("/care-providers/remove-caregiver", payload);
+    if (!doctor.data) {
+      throw new Error("no data received from the server");
+    }
+    return doctor.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to complete designating your caregiver `);
+    }
+    throw new Error(
+      "An unexpected error occured setting your preferred doctor"
     );
   }
 };

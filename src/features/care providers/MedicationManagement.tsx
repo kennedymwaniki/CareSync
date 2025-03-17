@@ -146,7 +146,7 @@ const MedicationManagement: React.FC = () => {
           <tr
             key={med.id}
             className={`text-sm hover:bg-gray-100 ${
-              index % 2 === 0 ? "bg-white" : "bg-gray-50"
+              index % 2 === 0 ? "bg-white" : "bg-gray-100"
             }`}
           >
             <td className="px-4 py-3">{med.medicationName}</td>

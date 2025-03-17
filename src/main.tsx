@@ -4,10 +4,18 @@ import "./index.css";
 import App from "./App.tsx";
 import { Provider } from "react-redux";
 import { store } from "./app/store.ts";
-
+import { Toaster } from "sonner";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
+      <Toaster
+        position="top-right"
+        richColors
+        closeButton
+        duration={5000}
+        expand={false}
+        theme="light"
+      />
       <App />
     </Provider>
   </StrictMode>

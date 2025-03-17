@@ -4,6 +4,7 @@ import api from "../../axios";
 import { useNavigate, Link } from "react-router-dom";
 import { Heart, Pill, Eye, EyeOff } from "lucide-react";
 import care from "../assets/carelogin.jpeg";
+import { toast } from "sonner";
 
 type FormValues = {
   email: string;
@@ -45,8 +46,10 @@ const Register = () => {
 
       if (response.status === 200) {
         setNotification("Registration successful!");
+        toast.success("Registration was successful!");
         navigate("/login");
       } else {
+        toast.error("Registration failed. Please try again.");
         setNotification("Registration failed. Please try again.");
       }
     } catch (error: unknown) {

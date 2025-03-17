@@ -22,7 +22,8 @@ interface Diagnosis {
 const PatientSummary = () => {
   const [medication, setMedication] = useState<Medication[]>([]);
   const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
-  const { profile } = useProfile(); // Use the custom hook
+  const { profile } = useProfile();
+  console.log(profile); // Use the custom hook
 
   useEffect(() => {
     const fetchData = async () => {

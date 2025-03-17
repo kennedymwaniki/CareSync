@@ -6,7 +6,7 @@ import { addDays, format } from "date-fns";
 import { ApiResponse, MedicationResponse } from "../types/types";
 import { getPatientMedication } from "../apis/PatientService";
 import { IoAddSharp } from "react-icons/io5";
-
+import { toast } from "sonner";
 import Loader from "../components/Loader";
 import { useProfile } from "../hooks/UseProfile";
 import Modal from "../components/Modal";
@@ -25,6 +25,7 @@ const MedicationsTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { profile } = useProfile();
+  console.log(profile);
   const patientId = profile?.patient.id;
 
   const openModal = () => setIsModalOpen(true);
@@ -46,8 +47,9 @@ const MedicationsTable = () => {
       if (!patientId) return;
       try {
         const response: ApiResponse = await getPatientMedication(patientId);
-        if (!response.data) {
-          throw new Error("No data received from server");
+        if (!response || !response.data || response.data.length === 0) {
+          toast.error("No medications found!!");
+          return;
         }
         // end date for each medication
         const enhancedMedications = response.data.map((med) => ({
@@ -64,6 +66,7 @@ const MedicationsTable = () => {
             ? error.message
             : "Failed to fetch patient medications"
         );
+        toast.error("Failed to fetch patient medications");
       } finally {
         setIsLoading(false);
       }
