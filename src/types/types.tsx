@@ -88,6 +88,7 @@ export interface CareGiverResponse {
 export type CareProvider = {
   profile: string;
   name: string;
+  id: number;
   role: string;
   specialty: string;
   active: boolean;

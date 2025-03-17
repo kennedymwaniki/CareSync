@@ -1,9 +1,72 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect, Suspense } from "react";
 import { getAllCareGivers } from "../../apis/CareGiverServive";
+import {
+  setPatientDoctor,
+  removePatientDoctor,
+} from "../../apis/PatientService";
 import { CareProvider } from "../../types/types";
 import Loader from "../../components/Loader";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { toast } from "sonner";
+import { useProfile } from "../../hooks/UseProfile";
+
+interface ActionMenuProps {
+  providerId: number;
+  onClose: () => void;
+  patientId: number;
+}
+
+const ActionMenu = ({ providerId, onClose, patientId }: ActionMenuProps) => {
+  const handleSetDoctor = async () => {
+    try {
+      const response = await setPatientDoctor(providerId, patientId);
+      if (!response.error) {
+        toast.success(response.message);
+      }
+      onClose();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to set doctor"
+      );
+    }
+  };
+
+  const handleRemoveDoctor = async () => {
+    try {
+      const response = await removePatientDoctor(providerId, patientId);
+      if (!response.error) {
+        toast.success("Doctor removed successfully");
+      }
+      onClose();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to remove doctor"
+      );
+    }
+  };
+
+  return (
+    <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+      <div className="py-1 bg-white rounded-md" role="menu">
+        <button
+          onClick={handleSetDoctor}
+          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          role="menuitem"
+        >
+          Set as my doctor
+        </button>
+        <button
+          onClick={handleRemoveDoctor}
+          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          role="menuitem"
+        >
+          Remove as my doctor
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const CareProvidersTable = () => {
   const [data, setData] = useState<CareProvider[]>([]);
@@ -12,6 +75,8 @@ const CareProvidersTable = () => {
   const [search, setSearch] = useState("");
   const [filterRole, setFilterRole] = useState<string | null>(null);
   const [filterActive, setFilterActive] = useState<boolean | null>(null);
+  const [activeMenu, setActiveMenu] = useState<number | null>(null);
+  const { profile } = useProfile();
 
   const fetchCareGivers = async () => {
     try {
@@ -23,6 +88,7 @@ const CareProvidersTable = () => {
         (caregiver) => ({
           profile: caregiver.profile.avatar || "👩‍⚕️",
           name: caregiver.name,
+          id: caregiver.id,
           role: caregiver.role,
           specialty: caregiver.user_role.specialization || "General",
           active: caregiver.user_role.active === "1",
@@ -66,6 +132,28 @@ const CareProvidersTable = () => {
       provider.name.toLowerCase().includes(search.toLowerCase())
     );
   });
+
+  const renderActionColumn = (provider: CareProvider) => {
+    return (
+      <td className="px-4 py-3 relative">
+        <button
+          className="text-blue-500 hover:bg-blue-100 p-2 rounded-full"
+          onClick={() =>
+            setActiveMenu(activeMenu === provider.id ? null : provider.id)
+          }
+        >
+          <BsThreeDotsVertical />
+        </button>
+        {activeMenu === provider.id && profile?.patient?.id && (
+          <ActionMenu
+            providerId={provider.id}
+            onClose={() => setActiveMenu(null)}
+            patientId={profile.patient.id}
+          />
+        )}
+      </td>
+    );
+  };
 
   return (
     <div className="p-4">
@@ -189,11 +277,7 @@ const CareProvidersTable = () => {
                   <td className="px-4 py-2">{provider.lastActivity}</td>
                   <td className="px-4 py-2">{provider.openTime}</td>
                   <td className="px-4 py-2">{provider.status}</td>
-                  <td className="px-4 py-3">
-                    <button className="text-blue-500 hover:bg-blue-100 p-2 rounded-full">
-                      <BsThreeDotsVertical />
-                    </button>
-                  </td>
+                  {renderActionColumn(provider)}
                 </tr>
               ))
             ) : (
