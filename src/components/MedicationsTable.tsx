@@ -60,6 +60,7 @@ const MedicationsTable = () => {
           ),
         }));
         setMedications(enhancedMedications);
+        toast.success("Diagnoses loaded successfully");
       } catch (error) {
         setError(
           error instanceof Error

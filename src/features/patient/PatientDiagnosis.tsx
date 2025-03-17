@@ -5,6 +5,7 @@ import { parseISO, format } from "date-fns";
 import { getPatientDiagnosis } from "../../apis/PatientService";
 import Loader from "../../components/Loader";
 import { useProfile } from "../../hooks/UseProfile";
+import { toast } from "sonner";
 
 interface Doctor {
   id: number;
@@ -60,21 +61,26 @@ const PatientDiagnosis = () => {
   useEffect(() => {
     const getDiagnoses = async (patientId: number) => {
       setIsLoading(true);
+
       setError(null);
       try {
         const response: ApiResponse = await getPatientDiagnosis(patientId);
+        console.log(response);
 
-        if (!response || !response.data) {
-          throw new Error("No data received from server");
+        if (!response || !response.data || response.data.length === 0) {
+          toast.error("No data received from server!!");
+          return;
         }
 
         setDiagnoses(response.data);
+        toast.success("Diagnoses loaded successfully");
       } catch (error) {
         setError(
           error instanceof Error
             ? error.message
             : "Failed to fetch patient diagnoses"
         );
+        toast.error("An error occured while fetching the sideeffects");
       } finally {
         setIsLoading(false);
       }

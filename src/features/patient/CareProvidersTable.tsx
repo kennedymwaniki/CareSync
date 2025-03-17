@@ -88,7 +88,7 @@ const CareProvidersTable = () => {
         (caregiver) => ({
           profile: caregiver.profile.avatar || "👩‍⚕️",
           name: caregiver.name,
-          id: caregiver.id,
+          id: caregiver.user_role.id,
           role: caregiver.role,
           specialty: caregiver.user_role.specialization || "General",
           active: caregiver.user_role.active === "1",
@@ -100,6 +100,7 @@ const CareProvidersTable = () => {
       );
 
       setData(transformedData);
+      toast.success("Data loaded sucessfully");
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to fetch care providers"
@@ -222,6 +223,7 @@ const CareProvidersTable = () => {
       <table className="min-w-full">
         <thead>
           <tr className="text-sm text-nowrap border-b-2">
+            <th className="px-4 py-2">Provider id</th>
             <th className="px-4 py-2">Profile</th>
             <th className="px-4 py-2">Name</th>
             <th className="px-4 py-2">Role</th>
@@ -261,6 +263,8 @@ const CareProvidersTable = () => {
                     index % 2 === 0 ? "bg-white" : "bg-gray-100"
                   }`}
                 >
+                  <td className="px-4 py-2">{provider.id}</td>
+
                   <td className="px-4 py-2">
                     <img
                       src={provider.profile}

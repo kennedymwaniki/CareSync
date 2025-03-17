@@ -8,6 +8,7 @@ import { IoAddSharp } from "react-icons/io5";
 import type { SideEffect, SideEffectApiResponse } from "../../types/types";
 import Modal from "../../components/Modal";
 import SideEffectsForm from "../../components/SideEffectsForm";
+import { toast } from "sonner";
 
 const PatientSideEffects = () => {
   const [sideEffects, setSideEffects] = useState<SideEffect[]>([]);
@@ -30,8 +31,8 @@ const PatientSideEffects = () => {
         const response: SideEffectApiResponse = await getPatientSideEffects(
           patientId
         );
-        if (!response.data) {
-          throw new Error("No data received from server");
+        if (!response.data || !response.data || response.data.length === 0) {
+          toast.error("No data received from server!!");
         }
         setSideEffects(response.data);
       } catch (error) {
@@ -40,6 +41,7 @@ const PatientSideEffects = () => {
             ? error.message
             : "Failed to fetch side effects"
         );
+        toast.error("An error occured while fetching the side effects");
       } finally {
         setIsLoading(false);
       }

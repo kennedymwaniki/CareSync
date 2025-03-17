@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
         position="top-right"
         richColors
         closeButton
-        duration={5000}
+        duration={4000}
         expand={false}
         theme="light"
       />

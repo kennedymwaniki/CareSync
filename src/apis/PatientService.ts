@@ -111,9 +111,11 @@ export const getPatientSideEffects = async (patient_id: number) => {
 export const setPatientDoctor = async (doctorId: number, patientId: number) => {
   try {
     const payload = {
-      patientId: patientId,
-      doctorId: doctorId,
+      doctor_id: doctorId,
+      patient_id: patientId,
+      isMain: false,
     };
+    console.log(payload);
     const doctor = await api.post("/care-providers/set-doctor", payload);
     if (!doctor.data) {
       throw new Error("no data received from the server");
@@ -135,10 +137,10 @@ export const removePatientDoctor = async (
 ) => {
   try {
     const payload = {
-      patientId: patientId,
-      doctorId: doctorId,
+      doctor_id: doctorId,
+      patient_id: patientId,
     };
-    const doctor = await api.post("/care-providers/set-doctor", payload);
+    const doctor = await api.post("/care-providers/remove-doctor", payload);
     if (!doctor.data) {
       throw new Error("no data received from the server");
     }
@@ -165,6 +167,7 @@ export const setPatientCareGiver = async (
       caregiverId: caregiverId,
       role: role,
     };
+    console.log(payload);
     const doctor = await api.post("/care-providers/set-caregiver", payload);
     if (!doctor.data) {
       throw new Error("no data received from the server");

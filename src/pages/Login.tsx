@@ -135,7 +135,7 @@ const Login = () => {
 
         <div className="max-w-md mx-auto w-full">
           <h1 className="text-3xl font-bold text-[#454BE7] mb-2">
-            Welcome back
+            Welcome back Dear Patient
           </h1>
           <p className="text-gray-600 mb-8">
             Sign in to your CarePulse account
@@ -244,6 +244,14 @@ const Login = () => {
                 className="text-[#454BE7] hover:text-indigo-500 font-medium"
               >
                 Go back home
+              </Link>
+            </p>
+            <p className="text-gray-600 mt-2">
+              <Link
+                to="/caregiver-login"
+                className="text-[#454BE7] hover:text-indigo-500 font-medium"
+              >
+                Are you a Care Provider ?
               </Link>
             </p>
           </div>
