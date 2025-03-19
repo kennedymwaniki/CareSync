@@ -27,6 +27,7 @@ import CareProviderLogin from "./features/care providers/CareProviderLogin";
 import MedicationManagement from "./features/care providers/MedicationManagement";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CareProviderRegistration from "./features/care providers/CareProviderRegistration";
+import Unauthorized from "./pages/Unauthorized";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/unauthorized",
+    element: <Unauthorized />,
   },
   {
     path: "/register",
@@ -58,7 +63,7 @@ const router = createBrowserRouter([
   // doctor routes
   {
     path: "/doctor",
-    element: <ProtectedRoute />,
+    element: <ProtectedRoute requiredRole="Doctor" />,
     children: [
       {
         path: "",
@@ -91,7 +96,7 @@ const router = createBrowserRouter([
   // care provider routes
   {
     path: "/careProvider",
-    element: <ProtectedRoute />,
+    element: <ProtectedRoute requiredRole="Caregiver" />,
     children: [
       {
         path: "",
@@ -128,7 +133,7 @@ const router = createBrowserRouter([
   // patient routes
   {
     path: "/patient",
-    element: <ProtectedRoute />,
+    element: <ProtectedRoute requiredRole="Patient" />,
     children: [
       {
         path: "",
