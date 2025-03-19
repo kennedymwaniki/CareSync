@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import api from "../../../axios";
 import { useNavigate, Link } from "react-router-dom";
 import { Heart, Pill, Eye, EyeOff } from "lucide-react";
-import care from "../../assets/carelogin.jpeg";
+import care from "../../assets/caregiver.png";
 import { toast } from "sonner";
 
 type FormValues = {
@@ -268,15 +268,6 @@ const CareProviderRegistration = () => {
               Are you a new doctor?
               <Link
                 to="/doctor-register"
-                className="text-[#454BE7] hover:text-indigo-500 font-medium"
-              >
-                Register here
-              </Link>
-            </p>
-            <p className="text-gray-600 mt-2">
-              Are you a new CareGiver?
-              <Link
-                to="/doc-reg"
                 className="text-[#454BE7] hover:text-indigo-500 font-medium"
               >
                 Register here

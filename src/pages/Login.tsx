@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../apis/authSlice";
 import { Heart, Pill, Eye, EyeOff } from "lucide-react";
@@ -245,22 +245,6 @@ const Login = () => {
               >
                 Create account
               </a>
-            </p>
-            <p className="text-gray-600 mt-2">
-              <Link
-                to="/"
-                className="text-[#454BE7] hover:text-indigo-500 font-medium"
-              >
-                Go back home
-              </Link>
-            </p>
-            <p className="text-gray-600 mt-2">
-              <Link
-                to="/caregiver-login"
-                className="text-[#454BE7] hover:text-indigo-500 font-medium"
-              >
-                Are you a Care Provider ?
-              </Link>
             </p>
           </div>
 
