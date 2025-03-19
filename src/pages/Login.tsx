@@ -72,7 +72,15 @@ const Login = () => {
       // Success case
       dispatch(loginUser({ user: response.user, token: response.token }));
       toast.success("Login successful, welcome back!");
-      navigate("/patient");
+      if (response.user.role === "Patient") {
+        navigate("/patient");
+      }
+      if (response.user.role === "Doctor") {
+        navigate("/doctor");
+      }
+      if (response.user.role === "CareProvider") {
+        navigate("/careProvider");
+      }
     } catch (err) {
       // Error handling
       const errorMessage =
@@ -135,7 +143,7 @@ const Login = () => {
 
         <div className="max-w-md mx-auto w-full">
           <h1 className="text-3xl font-bold text-[#454BE7] mb-2">
-            Welcome back Dear Patient
+            Welcome back!
           </h1>
           <p className="text-gray-600 mb-8">
             Sign in to your CarePulse account

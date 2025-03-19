@@ -3,7 +3,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import api from "../../../axios";
 import { useNavigate, Link } from "react-router-dom";
 import { Heart, Pill, Eye, EyeOff } from "lucide-react";
-import care from "../../assets/doctors.jpeg";
+import care from "../../assets/carelogin.jpeg";
+import { toast } from "sonner";
 
 type FormValues = {
   email: string;
@@ -12,7 +13,7 @@ type FormValues = {
   confirmPassword: string;
 };
 
-const DoctorRegistration = () => {
+const CareProviderRegistration = () => {
   const navigate = useNavigate();
   const {
     register,
@@ -23,7 +24,7 @@ const DoctorRegistration = () => {
   const [notification, setNotification] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const role = "CareGiver";
+  const role = "Patient";
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (data.password !== data.confirmPassword) {
@@ -45,8 +46,10 @@ const DoctorRegistration = () => {
 
       if (response.status === 200) {
         setNotification("Registration successful!");
+        toast.success("Registration was successful!");
         navigate("/login");
       } else {
+        toast.error("Registration failed. Please try again.");
         setNotification("Registration failed. Please try again.");
       }
     } catch (error: unknown) {
@@ -262,11 +265,21 @@ const DoctorRegistration = () => {
               </Link>
             </p>
             <p className="text-gray-600 mt-2">
+              Are you a new doctor?
               <Link
-                to="/"
+                to="/doctor-register"
                 className="text-[#454BE7] hover:text-indigo-500 font-medium"
               >
-                Go back home
+                Register here
+              </Link>
+            </p>
+            <p className="text-gray-600 mt-2">
+              Are you a new CareGiver?
+              <Link
+                to="/doc-reg"
+                className="text-[#454BE7] hover:text-indigo-500 font-medium"
+              >
+                Register here
               </Link>
             </p>
           </div>
@@ -280,4 +293,4 @@ const DoctorRegistration = () => {
   );
 };
 
-export default DoctorRegistration;
+export default CareProviderRegistration;

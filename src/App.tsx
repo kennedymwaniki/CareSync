@@ -1,8 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
 import PatientDashboard from "./features/patient/PatientDashboard";
 import PatientSummary from "./features/patient/PatientSummary";
 import Medication from "./features/patient/Medication";
@@ -27,8 +25,14 @@ import DoctorReports from "./features/doctor/DoctorReports";
 import DoctorRegistration from "./features/doctor/DoctorRegistration";
 import CareProviderLogin from "./features/care providers/CareProviderLogin";
 import MedicationManagement from "./features/care providers/MedicationManagement";
+import ProtectedRoute from "./components/ProtectedRoute";
+import CareProviderRegistration from "./features/care providers/CareProviderRegistration";
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Login />,
+  },
   {
     path: "/login",
     element: <Login />,
@@ -37,126 +41,142 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
+
   {
-    path: "/",
-    element: <Home />,
+    path: "/caregiver-register",
+    element: <CareProviderRegistration />,
   },
   {
-    path: "/admin",
-    element: <Dashboard />,
-  },
-  {
-    path: "/doc-reg",
+    path: "/doctor-register",
     element: <DoctorRegistration />,
   },
   {
     path: "/caregiver-login",
     element: <CareProviderLogin />,
   },
+
   // doctor routes
   {
     path: "/doctor",
-    element: <DoctorDashboard />,
+    element: <ProtectedRoute />,
     children: [
       {
-        index: true,
-        element: <DoctorSummary />,
-      },
-      {
-        path: "shared-notes",
-        element: <DoctorNotes />,
-      },
-      {
-        path: "patients",
-        element: <PatientsListTable />,
-      },
-      {
-        path: "care-providers",
-        element: <CareProvidersTable />,
-      },
-      {
-        path: "doctor-reports",
-        element: <DoctorReports />,
+        path: "",
+        element: <DoctorDashboard />,
+        children: [
+          {
+            index: true,
+            element: <DoctorSummary />,
+          },
+          {
+            path: "shared-notes",
+            element: <DoctorNotes />,
+          },
+          {
+            path: "patients",
+            element: <PatientsListTable />,
+          },
+          {
+            path: "care-providers",
+            element: <CareProvidersTable />,
+          },
+          {
+            path: "doctor-reports",
+            element: <DoctorReports />,
+          },
+        ],
       },
     ],
   },
   // care provider routes
   {
     path: "/careProvider",
-    element: <CareGiversDashBoard />,
+    element: <ProtectedRoute />,
     children: [
       {
-        index: true,
-        element: <CareProvidersSummary />,
-      },
-      {
-        path: "shared-notes",
-        element: <DoctorNotes />,
-      },
-      {
-        path: "patients",
-        element: <PatientsListTable />,
-      },
-      {
-        path: "care-providers",
-        element: <CareProvidersTable />,
-      },
-      {
-        path: "caregiver-report",
-        element: <CareGiverReports />,
-      },
-      {
-        path: "medication-management",
-        element: <MedicationManagement />,
+        path: "",
+        element: <CareGiversDashBoard />,
+        children: [
+          {
+            index: true,
+            element: <CareProvidersSummary />,
+          },
+          {
+            path: "shared-notes",
+            element: <DoctorNotes />,
+          },
+          {
+            path: "patients",
+            element: <PatientsListTable />,
+          },
+          {
+            path: "care-providers",
+            element: <CareProvidersTable />,
+          },
+          {
+            path: "caregiver-report",
+            element: <CareGiverReports />,
+          },
+          {
+            path: "medication-management",
+            element: <MedicationManagement />,
+          },
+        ],
       },
     ],
   },
   // patient routes
   {
     path: "/patient",
-    element: <PatientDashboard />,
+    element: <ProtectedRoute />,
     children: [
       {
-        index: true,
-        element: <PatientSummary />,
-      },
-      {
-        path: "medication",
-        element: <Medication />,
+        path: "",
+        element: <PatientDashboard />,
         children: [
           {
             index: true,
-            element: <MedicationsTable />,
+            element: <PatientSummary />,
           },
           {
-            path: "diagnosis",
-            element: <PatientDiagnosis />,
+            path: "medication",
+            element: <Medication />,
+            children: [
+              {
+                index: true,
+                element: <MedicationsTable />,
+              },
+              {
+                path: "diagnosis",
+                element: <PatientDiagnosis />,
+              },
+              {
+                path: "side-effects",
+                element: <PatientSideEffects />,
+              },
+            ],
           },
           {
-            path: "side-effects",
-            element: <PatientSideEffects />,
+            path: "patient-reminder",
+            element: <PatientReminders />,
+          },
+          {
+            path: "care-providers",
+            element: <CareProvidersTable />,
+          },
+          {
+            path: "patient-report",
+            element: <PatientAnalytics />,
+          },
+          {
+            path: "patient-profile",
+            element: <PatientProfile />,
+          },
+          {
+            path: "patient-notifications",
+            element: <PatientNotifications />,
           },
         ],
-      },
-      {
-        path: "patient-reminder",
-        element: <PatientReminders />,
-      },
-      {
-        path: "care-providers",
-        element: <CareProvidersTable />,
-      },
-      {
-        path: "patient-report",
-        element: <PatientAnalytics />,
-      },
-      {
-        path: "patient-profile",
-        element: <PatientProfile />,
-      },
-      {
-        path: "patient-notifications",
-        element: <PatientNotifications />,
       },
     ],
   },

@@ -265,11 +265,21 @@ const Register = () => {
               </Link>
             </p>
             <p className="text-gray-600 mt-2">
+              Are you a new doctor?
               <Link
-                to="/"
+                to="/doctor-register"
                 className="text-[#454BE7] hover:text-indigo-500 font-medium"
               >
-                Go back home
+                Register here
+              </Link>
+            </p>
+            <p className="text-gray-600 mt-2">
+              Are you a new CareGiver?
+              <Link
+                to="/caregiver-register"
+                className="text-[#454BE7] hover:text-indigo-500 font-medium"
+              >
+                Register here
               </Link>
             </p>
           </div>
