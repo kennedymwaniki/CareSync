@@ -2,6 +2,9 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FiBell, FiSettings, FiChevronDown } from "react-icons/fi";
 import logo from "../../assets/carepulse logo_2.png";
+import { logoutUser } from "../../apis/authSlice";
+import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 
 interface SidebarProps {
   navigation: {
@@ -13,11 +16,15 @@ interface SidebarProps {
 
 const PatientSideBar = ({ navigation }: SidebarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
-
+  const logout = () => {
+    dispatch(logoutUser());
+    toast.success("Logged out successfully");
+  };
   return (
     <aside className="w-64 bg-white shadow-xl min-h-screen flex flex-col  border-r">
       <div>
@@ -112,7 +119,7 @@ const PatientSideBar = ({ navigation }: SidebarProps) => {
             </NavLink>
             <button
               className="w-full text-left block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
-              onClick={() => console.log("Logout clicked")}
+              onClick={logout}
             >
               Logout
             </button>
