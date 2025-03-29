@@ -11,6 +11,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { toast } from "sonner";
 import { useProfile } from "../../hooks/UseProfile";
 import PatientDoctors from "./PatientDoctors";
+import PatientCaregivers from "./PatientCaregivers";
 
 // Component remains the same
 interface ActionMenuProps {
@@ -66,22 +67,6 @@ const ActionMenu = ({ providerId, onClose, patientId }: ActionMenuProps) => {
         >
           Remove as my doctor
         </button>
-      </div>
-    </div>
-  );
-};
-
-// Define a placeholder component for PatientCaregivers
-const PatientCaregivers = () => {
-  return (
-    <div className="p-6">
-      <h1 className="text-xl font-bold mb-4">My Care Givers</h1>
-      <p className="text-gray-600 mb-4">
-        Manage your assigned caregivers here.
-      </p>
-      {/* Implement your caregivers table here */}
-      <div className="text-center py-10 bg-gray-50 rounded-lg">
-        <p>Patient caregivers component to be implemented</p>
       </div>
     </div>
   );
