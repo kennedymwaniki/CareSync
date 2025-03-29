@@ -10,7 +10,9 @@ import Loader from "../../components/Loader";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { toast } from "sonner";
 import { useProfile } from "../../hooks/UseProfile";
+import PatientDoctors from "./PatientDoctors";
 
+// Component remains the same
 interface ActionMenuProps {
   providerId: number;
   onClose: () => void;
@@ -18,6 +20,7 @@ interface ActionMenuProps {
 }
 
 const ActionMenu = ({ providerId, onClose, patientId }: ActionMenuProps) => {
+  // Action menu implementation remains the same
   const handleSetDoctor = async () => {
     try {
       const response = await setPatientDoctor(providerId, patientId);
@@ -68,15 +71,34 @@ const ActionMenu = ({ providerId, onClose, patientId }: ActionMenuProps) => {
   );
 };
 
+// Define a placeholder component for PatientCaregivers
+const PatientCaregivers = () => {
+  return (
+    <div className="p-6">
+      <h1 className="text-xl font-bold mb-4">My Care Givers</h1>
+      <p className="text-gray-600 mb-4">
+        Manage your assigned caregivers here.
+      </p>
+      {/* Implement your caregivers table here */}
+      <div className="text-center py-10 bg-gray-50 rounded-lg">
+        <p>Patient caregivers component to be implemented</p>
+      </div>
+    </div>
+  );
+};
+
+// Main component with navigation
 const CareProvidersTable = () => {
   const [data, setData] = useState<CareProvider[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [filterRole, setFilterRole] = useState<string | null>(null);
-  const [filterActive, setFilterActive] = useState<boolean | null>(null);
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const { profile } = useProfile();
+  // Add state to track which view is active
+  const [activeView, setActiveView] = useState<
+    "all" | "doctors" | "caregivers"
+  >("all");
 
   const fetchCareGivers = async () => {
     try {
@@ -86,11 +108,11 @@ const CareProvidersTable = () => {
 
       const transformedData: CareProvider[] = response.data.map(
         (caregiver) => ({
-          profile: caregiver.profile.avatar || "👩‍⚕️",
+          profile: caregiver?.profile?.avatar || "👩‍⚕️",
           name: caregiver.name,
-          id: caregiver.user_role.id,
+          id: caregiver.user_role?.id,
           role: caregiver.role,
-          specialty: caregiver.user_role.specialization || "General",
+          specialty: caregiver.user_role?.specialization || "General",
           active: caregiver.user_role.active === "1",
           lastActivity: caregiver.user_role.last_activity || "No activity",
           openTime: "9:00 AM",
@@ -100,7 +122,7 @@ const CareProvidersTable = () => {
       );
 
       setData(transformedData);
-      toast.success("Data loaded sucessfully");
+      toast.success("Data loaded successfully");
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to fetch care providers"
@@ -118,20 +140,8 @@ const CareProvidersTable = () => {
     setSearch(e.target.value);
   };
 
-  const handleFilterRole = (role: string | null) => {
-    setFilterRole(role);
-  };
-
-  const handleFilterActive = (active: boolean | null) => {
-    setFilterActive(active);
-  };
-
   const filteredData = data.filter((provider) => {
-    return (
-      (!filterRole || provider.role === filterRole) &&
-      (filterActive === null || provider.active === filterActive) &&
-      provider.name.toLowerCase().includes(search.toLowerCase())
-    );
+    return provider.name.toLowerCase().includes(search.toLowerCase());
   });
 
   const renderActionColumn = (provider: CareProvider) => {
@@ -156,70 +166,63 @@ const CareProvidersTable = () => {
     );
   };
 
-  return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Care Providers</h1>
-      <div className="flex items-center gap-4 mb-4">
-        <div>
+  // Render the main navigation
+  const renderNavigation = () => {
+    return (
+      <div className="flex mb-6">
+        {/* Left side navigation links */}
+        <div className="inline-flex gap-4 items-center justify-between mr-auto">
           <button
-            onClick={() => handleFilterRole("Doctor")}
-            className={`px-3 py-1 text-sm rounded-md ${
-              filterRole === "Doctor"
-                ? "bg-[#454BE7] text-white"
-                : "bg-gray-200"
+            onClick={() => setActiveView("all")}
+            className={`font-medium ${
+              activeView === "all"
+                ? "text-[#454BE7] border-b-2 border-[#454BE7]"
+                : "text-gray-600 hover:text-blue-700"
             }`}
           >
-            Doctor
+            All Care Providers
           </button>
           <button
-            onClick={() => handleFilterRole("Nurse")}
-            className={`ml-2 px-3 py-1 text-sm rounded-md ${
-              filterRole === "Nurse"
-                ? "bg-[#454ae756] text-[#454BE7]"
-                : "bg-gray-200"
+            onClick={() => setActiveView("doctors")}
+            className={`font-medium ${
+              activeView === "doctors"
+                ? "text-[#454BE7] border-b-2 border-[#454BE7]"
+                : "text-gray-600 hover:text-blue-700"
             }`}
           >
-            Nurse
+            My Doctors
           </button>
           <button
-            onClick={() => handleFilterRole(null)}
-            className="ml-2 px-3 py-1 text-sm rounded-md bg-gray-200"
+            onClick={() => setActiveView("caregivers")}
+            className={`font-medium ${
+              activeView === "caregivers"
+                ? "text-[#454BE7] border-b-2 border-[#454BE7]"
+                : "text-gray-600 hover:text-blue-700"
+            }`}
           >
-            Clear Role
+            My Care Givers
           </button>
         </div>
-        <div>
-          <button
-            onClick={() => handleFilterActive(true)}
-            className={`px-3 py-1 text-sm rounded-md ${
-              filterActive === true ? "bg-green-500 text-white" : "bg-gray-200"
-            }`}
-          >
-            Active
-          </button>
-          <button
-            onClick={() => handleFilterActive(false)}
-            className={`ml-2 px-3 py-1 text-sm rounded-md ${
-              filterActive === false ? "bg-red-500 text-white" : "bg-gray-200"
-            }`}
-          >
-            Inactive
-          </button>
-          <button
-            onClick={() => handleFilterActive(null)}
-            className="ml-2 px-3 py-1 text-sm rounded-md bg-gray-200"
-          >
-            Clear Status
-          </button>
-        </div>
-        <input
-          type="text"
-          placeholder="Search name..."
-          value={search}
-          onChange={handleSearch}
-          className="ml-auto px-4 py-2 border rounded-md"
-        />
+
+        {/* Search input - only show for All Care Providers view */}
+        {activeView === "all" && (
+          <div>
+            <input
+              type="text"
+              placeholder="Search name..."
+              value={search}
+              onChange={handleSearch}
+              className="px-4 py-2 border rounded-md"
+            />
+          </div>
+        )}
       </div>
+    );
+  };
+
+  // Render the all care providers table
+  const renderAllCareProvidersTable = () => {
+    return (
       <table className="min-w-full">
         <thead>
           <tr className="text-sm text-nowrap border-b-2">
@@ -239,13 +242,13 @@ const CareProvidersTable = () => {
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={8} className="text-center py-4">
+                <td colSpan={10} className="text-center py-4">
                   <Loader />
                 </td>
               </tr>
             ) : error ? (
               <tr>
-                <td colSpan={8} className="text-center py-4 text-red-500">
+                <td colSpan={10} className="text-center py-4 text-red-500">
                   Error: {error}
                   <button
                     onClick={fetchCareGivers}
@@ -264,7 +267,6 @@ const CareProvidersTable = () => {
                   }`}
                 >
                   <td className="px-4 py-2">{provider.id}</td>
-
                   <td className="px-4 py-2">
                     <img
                       src={provider.profile}
@@ -286,7 +288,7 @@ const CareProvidersTable = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={8} className="text-center py-4">
+                <td colSpan={10} className="text-center py-4">
                   There is no data to display here!
                 </td>
               </tr>
@@ -294,6 +296,27 @@ const CareProvidersTable = () => {
           </tbody>
         </Suspense>
       </table>
+    );
+  };
+
+  // Render the appropriate content based on the active view
+  const renderContent = () => {
+    switch (activeView) {
+      case "doctors":
+        return <PatientDoctors />;
+      case "caregivers":
+        return <PatientCaregivers />;
+      case "all":
+      default:
+        return renderAllCareProvidersTable();
+    }
+  };
+
+  return (
+    <div className="p-4">
+      <h1 className="text-xl font-bold mb-4">Care Providers</h1>
+      {renderNavigation()}
+      {renderContent()}
     </div>
   );
 };

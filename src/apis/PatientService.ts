@@ -1,12 +1,6 @@
 import api from "../../axios";
 import { toast } from "sonner";
 
-// get patient doctors
-export const getPatientDoctors = async (patientId: number) => {
-  const doctors = await api.get(`/patients/${patientId}/doctors`);
-  return doctors;
-};
-
 // get all patient data
 export const getPatientData = async (patientId: number) => {
   const patientData = await api.get(`/dashboard/patient-dat/${patientId}`);
@@ -57,6 +51,24 @@ export const getPatientCareProviders = async (patientId: number) => {
   try {
     const careProviders = await api.get(
       `/care-providers/fetch-patient-caregivers/${patientId}`
+    );
+    if (!careProviders) {
+      throw new Error("no data found on the server");
+    }
+    return careProviders.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch Diagnosis: ${error.message}`);
+    }
+    throw new Error("An error occured while fetching the careProviders");
+  }
+};
+
+// fetch patient care providers
+export const getPatientDoctors = async (patientId: number) => {
+  try {
+    const careProviders = await api.get(
+      `/care-providers/fetch-patient-doctors/${patientId}`
     );
     if (!careProviders) {
       throw new Error("no data found on the server");
@@ -130,7 +142,7 @@ export const setPatientDoctor = async (doctorId: number, patientId: number) => {
     );
   }
 };
-// set patient doctor
+// remove patient doctor
 export const removePatientDoctor = async (
   doctorId: number,
   patientId: number
