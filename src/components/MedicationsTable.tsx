@@ -146,8 +146,8 @@ const MedicationsTable = () => {
           {format(parseISO(med.prescribed_date), "yyyy-MM-dd")}
         </td>
         <td className="px-4 py-2">{med.calculatedEndDate}</td>
-        <td className="px-4 py-2">{med.doctor.name}</td>
-        <td className="px-4 py-2">{`${med.route.name} - ${med.form.name}`}</td>
+        <td className="px-4 py-2">{med.doctor?.name}</td>
+        <td className="px-4 py-2">{`${med.route?.name} - ${med.form?.name}`}</td>
         <td className="px-4 py-2">{med.active ? "Active" : "Inactive"}</td>
         <td className="px-4 py-2">{/* Add your action buttons here */}</td>
       </tr>

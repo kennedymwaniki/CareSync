@@ -28,6 +28,7 @@ import MedicationManagement from "./features/care providers/MedicationManagement
 import ProtectedRoute from "./components/ProtectedRoute";
 import CareProviderRegistration from "./features/care providers/CareProviderRegistration";
 import Unauthorized from "./pages/Unauthorized";
+import DoctorProfile from "./features/doctor/DoctorProfile";
 
 const router = createBrowserRouter([
   {
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
           {
             path: "doctor-reports",
             element: <DoctorReports />,
+          },
+          {
+            path: "doctor-profile",
+            element: <DoctorProfile />,
           },
         ],
       },
