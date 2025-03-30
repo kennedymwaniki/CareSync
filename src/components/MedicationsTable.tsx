@@ -21,12 +21,11 @@ const MedicationsTable = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setIsLoading] = useState<boolean>(false);
   const [filter, setFilter] = useState<"All" | "Today">("All");
-  const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { profile } = useProfile();
   console.log(profile);
-  const patientId = profile?.patient.id;
+  const patientId = Number(profile?.patient.id);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -40,45 +39,48 @@ const MedicationsTable = () => {
     return format(addDays(date, days), "yyyy-MM-dd");
   };
 
-  useEffect(() => {
-    const getMedications = async (patientId: number) => {
-      setIsLoading(true);
-      setError(null);
-      if (!patientId) return;
-      try {
-        const response: ApiResponse = await getPatientMedication(patientId);
-        if (!response || !response.data || response.data.length === 0) {
-          toast.error("No medications found!!");
-          return;
-        }
-        // end date for each medication
-        const enhancedMedications = response.data.map((med) => ({
-          ...med,
-          calculatedEndDate: calculateEndDate(
-            med.prescribed_date,
-            med.duration
-          ),
-        }));
-        setMedications(enhancedMedications);
-        toast.success("Diagnoses loaded successfully");
-      } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : "Failed to fetch patient medications"
-        );
-        toast.error("Failed to fetch patient medications");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const fetchMedications = async () => {
+    if (!patientId) return;
 
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response: ApiResponse = await getPatientMedication(patientId);
+      if (!response || !response.data || response.data.length === 0) {
+        toast.error("No medications found!!");
+        setMedications([]);
+        return;
+      }
+      // end date for each medication
+      const enhancedMedications = response.data.map((med) => ({
+        ...med,
+        calculatedEndDate: calculateEndDate(med.prescribed_date, med.duration),
+      }));
+      setMedications(enhancedMedications);
+      toast.success("Medications loaded successfully");
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch patient medications"
+      );
+      toast.error("Failed to fetch patient medications");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     if (patientId) {
-      getMedications(patientId);
+      fetchMedications();
     }
   }, [patientId]);
 
-  const rowsPerPage = 5;
+  const handleMedicationAdded = () => {
+    closeModal();
+    fetchMedications();
+  };
 
   const filteredMedications = medications.filter((med) => {
     if (filter === "Today") {
@@ -93,15 +95,6 @@ const MedicationsTable = () => {
     }
     return true;
   });
-
-  const indexOfLastRow = currentPage * rowsPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = filteredMedications.slice(
-    indexOfFirstRow,
-    indexOfLastRow
-  );
-
-  const totalPages = Math.ceil(filteredMedications.length / rowsPerPage);
 
   // Render table body based on loading, error and data states
   const renderTableBody = () => {
@@ -125,7 +118,7 @@ const MedicationsTable = () => {
       );
     }
 
-    if (currentRows.length === 0) {
+    if (filteredMedications.length === 0) {
       return (
         <tr>
           <td colSpan={10} className="text-center py-4">
@@ -136,7 +129,7 @@ const MedicationsTable = () => {
       );
     }
 
-    return currentRows.map((med) => (
+    return filteredMedications.map((med) => (
       <tr key={med.id} className="hover:bg-gray-50 text-sm text-nowrap">
         <td className="px-4 py-2 text-center">{med.id}</td>
         <td className="px-4 py-2">{med.medication_name}</td>
@@ -196,31 +189,16 @@ const MedicationsTable = () => {
         </table>
       </div>
 
-      {filteredMedications.length > rowsPerPage && (
-        <div className="flex justify-center mt-4">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => setCurrentPage(page)}
-              className={`px-4 py-2 mx-1 border rounded ${
-                currentPage === page
-                  ? "bg-blue-500 text-white"
-                  : "bg-white text-blue-500"
-              } hover:bg-blue-600 hover:text-white`}
-            >
-              {page}
-            </button>
-          ))}
-        </div>
-      )}
-
       {/* Modal Component */}
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
         title="Add New Medication"
       >
-        <MedicationForm />
+        <MedicationForm
+          patient_id={patientId}
+          onSuccess={handleMedicationAdded}
+        />
       </Modal>
     </div>
   );

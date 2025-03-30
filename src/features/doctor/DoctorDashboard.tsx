@@ -9,7 +9,6 @@ const patientNavigation = [
   { name: "Doctor's Dashboard", icon: FiServer, path: "." },
   { name: "Patients", icon: SlPeople, path: "patients" },
 
-  // { name: "Care Providers", icon: FaUserNurse, path: "care-providers" },
   { name: "Reports & Analytics", icon: FileText, path: "doctor-reports" },
 ];
 
