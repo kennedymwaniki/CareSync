@@ -4,6 +4,8 @@ import { getAllCareGivers } from "../../apis/CareGiverServive";
 import {
   setPatientDoctor,
   removePatientDoctor,
+  setPatientCareGiver,
+  removePatientCareGiver,
 } from "../../apis/PatientService";
 import { CareProvider } from "../../types/types";
 import Loader from "../../components/Loader";
@@ -18,15 +20,17 @@ interface ActionMenuProps {
   providerId: number;
   onClose: () => void;
   patientId: number;
+  providerRole: string;
 }
 
-const ActionMenu = ({ providerId, onClose, patientId }: ActionMenuProps) => {
-  // Action menu implementation remains the same
+// prettier-ignore
+const ActionMenu = ({providerId,onClose,patientId,providerRole,}: ActionMenuProps) => {
+  // Doctor-specific actions
   const handleSetDoctor = async () => {
     try {
       const response = await setPatientDoctor(providerId, patientId);
       if (!response.error) {
-        toast.success(response.message);
+        toast.success(response.message || "Doctor assigned successfully");
       }
       onClose();
     } catch (error) {
@@ -50,23 +54,79 @@ const ActionMenu = ({ providerId, onClose, patientId }: ActionMenuProps) => {
     }
   };
 
+  // Caregiver-specific actions
+  const handleSetCaregiver = async () => {
+    try {
+      const response = await setPatientCareGiver(
+        providerId,
+        patientId,
+      );
+      if (!response.error) {
+        toast.success(response.message || "Caregiver assigned successfully");
+      }
+      onClose();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to set caregiver"
+      );
+    }
+  };
+
+  const handleRemoveCaregiver = async () => {
+    try {
+      const response = await removePatientCareGiver(providerId, patientId);
+      if (!response.error) {
+        toast.success("Caregiver removed successfully");
+      }
+      onClose();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to remove caregiver"
+      );
+    }
+  };
+
   return (
-    <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+    <div 
+      className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50"
+      onClick={(e) => e.stopPropagation()} // Prevent clicks from bubbling to parent
+    >
       <div className="py-1 bg-white rounded-md" role="menu">
-        <button
-          onClick={handleSetDoctor}
-          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          role="menuitem"
-        >
-          Set as my doctor
-        </button>
-        <button
-          onClick={handleRemoveDoctor}
-          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          role="menuitem"
-        >
-          Remove as my doctor
-        </button>
+        {providerRole === "Doctor" ? (
+          <>
+            <button
+              onClick={handleSetDoctor}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              Set as my doctor
+            </button>
+            <button
+              onClick={handleRemoveDoctor}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              Remove as my doctor
+            </button>
+          </>
+        ) : providerRole === "Caregiver" ? (
+          <>
+            <button
+              onClick={handleSetCaregiver}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              Set as my caregiver
+            </button>
+            <button
+              onClick={handleRemoveCaregiver}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              Remove as my caregiver
+            </button>
+          </>
+        ) : null}
       </div>
     </div>
   );
@@ -134,9 +194,12 @@ const CareProvidersTable = () => {
       <td className="px-4 py-3 relative">
         <button
           className="text-blue-500 hover:bg-blue-100 p-2 rounded-full"
-          onClick={() =>
-            setActiveMenu(activeMenu === provider.id ? null : provider.id)
-          }
+          onClick={(e) => {
+            e.stopPropagation(); // Stop event from bubbling up
+            // Check for null, undefined, or type mismatches
+            const isActive = activeMenu === provider.id;
+            setActiveMenu(isActive ? null : provider.id);
+          }}
         >
           <BsThreeDotsVertical />
         </button>
@@ -145,6 +208,7 @@ const CareProvidersTable = () => {
             providerId={provider.id}
             onClose={() => setActiveMenu(null)}
             patientId={profile.patient.id}
+            providerRole={provider.role}
           />
         )}
       </td>
@@ -250,6 +314,7 @@ const CareProvidersTable = () => {
                   className={`text-sm hover:bg-gray-100 ${
                     index % 2 === 0 ? "bg-white" : "bg-gray-100"
                   }`}
+                  onClick={() => setActiveMenu(null)} // Close menu when clicking row
                 >
                   <td className="px-4 py-2">{provider.id}</td>
                   <td className="px-4 py-2">

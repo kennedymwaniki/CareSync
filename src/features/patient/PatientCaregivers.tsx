@@ -162,7 +162,7 @@ const PatientCaregivers = () => {
               <img
                 className="h-10 w-10 rounded-full"
                 src={
-                  caregiver.profile.avatar || "https://via.placeholder.com/40"
+                  caregiver.profile?.avatar || "https://via.placeholder.com/40"
                 }
                 alt={caregiver.name}
               />

@@ -95,27 +95,79 @@ const PatientProfile = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check file size (limit to 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image size should be less than 5MB");
-      return;
-    }
-
     // Check file type
     if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
       toast.error("Only JPEG, JPG and PNG images are allowed");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("avatar", file);
-
     try {
       setUploading(true);
-      const response = await api.patch("/profile", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+
+      // Create an image element to resize the image
+      const img = new Image();
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        img.src = e.target?.result as string;
+
+        img.onload = () => {
+          // Create a canvas to resize the image
+          const canvas = document.createElement("canvas");
+
+          // Define max dimensions for a much smaller image
+          let width = img.width;
+          let height = img.height;
+          const maxWidth = 150; // Reduced from 300
+          const maxHeight = 150; // Reduced from 300
+
+          // Resize logic to maintain aspect ratio
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round(height * (maxWidth / width));
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round(width * (maxHeight / height));
+              height = maxHeight;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          // Draw the resized image on the canvas
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          // Get the resized image as JPEG with reduced quality
+          const resizedImage = canvas.toDataURL("image/jpeg", 0.4); // Using 40% quality instead of 70%
+
+          // Send the resized image to the server
+          updateProfileImage(resizedImage);
+        };
+      };
+
+      reader.onerror = () => {
+        toast.error("Failed to process the image");
+        setUploading(false);
+      };
+
+      reader.readAsDataURL(file);
+    } catch (error) {
+      toast.error("Failed to upload image");
+      console.log(error); // Rethrow the error to be caught in the catch block
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // New function to handle the API request
+  const updateProfileImage = async (imageDataUrl: string) => {
+    try {
+      const response = await api.patch("/profile", {
+        avatar: imageDataUrl,
       });
 
       if (!response.data.error) {

@@ -170,27 +170,28 @@ export const removePatientDoctor = async (
 // set patient caregiver
 export const setPatientCareGiver = async (
   caregiverId: number,
-  patientId: number,
-  role: string
+  patientId: number
 ) => {
   try {
     const payload = {
-      patientId: patientId,
-      caregiverId: caregiverId,
-      role: role,
+      caregiver_id: caregiverId,
+      patient_id: patientId,
+      relation: "Parent",
     };
-    console.log(payload);
-    const doctor = await api.post("/care-providers/set-caregiver", payload);
-    if (!doctor.data) {
+
+    const response = await api.post("/care-providers/set-caregiver", payload);
+    if (!response.data) {
       throw new Error("no data received from the server");
     }
-    return doctor.data;
+    return response.data;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Failed to complete designating your caregiver `);
+      throw new Error(
+        `Failed to complete designating your caregiver: ${error.message}`
+      );
     }
     throw new Error(
-      "An unexpected error occured setting your preferred caregiver"
+      "An unexpected error occurred setting your preferred caregiver"
     );
   }
 };
@@ -202,20 +203,24 @@ export const removePatientCareGiver = async (
 ) => {
   try {
     const payload = {
-      patientId: patientId,
-      caregiverId: caregiverId,
+      caregiver_id: caregiverId, // Changed from caregiverId
+      patient_id: patientId, // Changed from patientId
     };
-    const doctor = await api.post("/care-providers/remove-caregiver", payload);
-    if (!doctor.data) {
+
+    const response = await api.post(
+      "/care-providers/remove-caregiver",
+      payload
+    );
+    if (!response.data) {
       throw new Error("no data received from the server");
     }
-    return doctor.data;
+    return response.data;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Failed to complete designating your caregiver `);
+      throw new Error(`Failed to remove caregiver: ${error.message}`);
     }
     throw new Error(
-      "An unexpected error occured setting your preferred doctor"
+      "An unexpected error occurred while removing your caregiver"
     );
   }
 };
