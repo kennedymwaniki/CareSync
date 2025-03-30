@@ -48,12 +48,12 @@ const PatientSummary = () => {
 
   const data = {
     name: "Total Medication",
-    quantity: medication.length,
+    quantity: medication.length ?? 0,
     color: "border-r-blue-700",
   };
   const data2 = {
     name: "Diagnosis",
-    quantity: diagnosis.length,
+    quantity: diagnosis.length ?? 0,
     color: "border-r-green-600",
   };
   const data3 = {

@@ -50,7 +50,7 @@ const MedicationForm = () => {
             htmlFor="dosage_quantity"
             className="block text-sm font-medium mb-1"
           >
-            Dosage
+            Dosage quantity
           </label>
           <input
             id="dosage_quantity"
@@ -70,7 +70,7 @@ const MedicationForm = () => {
             htmlFor="dosage_strength"
             className="block text-sm font-medium mb-1"
           >
-            Dosage
+            Dosage strength
           </label>
           <input
             id="dosage_strength"
@@ -85,7 +85,7 @@ const MedicationForm = () => {
 
         <div>
           <label htmlFor="form" className="block text-sm font-medium mb-1">
-            Form
+            medication form(mode of administration)
           </label>
           <input
             id="form"

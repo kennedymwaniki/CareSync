@@ -4,8 +4,7 @@ import { useForm } from "react-hook-form";
 interface SideEffectFormData {
   medication: string;
   dateAndTime: string;
-  typeOfSideEffect: string;
-  severity: string;
+  severity: "Mild" | "Moderate" | "Severe"; // Modified to be a specific set of values
   duration: string;
   additionalNotes: string;
 }
@@ -63,32 +62,19 @@ const SideEffectsForm: React.FC = () => {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label
-            htmlFor="typeOfSideEffect"
-            className="block text-sm font-medium mb-1"
-          >
-            Type of Side Effect
-          </label>
-          <input
-            id="typeOfSideEffect"
-            type="text"
-            className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            {...register("typeOfSideEffect", { required: true })}
-          />
-          {errors.typeOfSideEffect && (
-            <span className="text-red-500 text-sm">Required field</span>
-          )}
-        </div>
-        <div>
           <label htmlFor="severity" className="block text-sm font-medium mb-1">
             Severity
           </label>
-          <input
+          <select
             id="severity"
-            type="text"
             className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register("severity", { required: true })}
-          />
+          >
+            <option value="">Select severity</option>
+            <option value="Mild">Mild</option>
+            <option value="Moderate">Moderate</option>
+            <option value="Severe">Severe</option>
+          </select>
           {errors.severity && (
             <span className="text-red-500 text-sm">Required field</span>
           )}
