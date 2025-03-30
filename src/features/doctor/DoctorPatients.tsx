@@ -61,12 +61,13 @@ const DoctorPatients = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [doctorProfile, setDoctorProfile] = useState<DoctorProfile | null>(
+  const [_doctorProfile, setDoctorProfile] = useState<DoctorProfile | null>(
     null
   );
 
   useEffect(() => {
     fetchDoctorProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Fetch doctor profile first to get the doctor's ID
