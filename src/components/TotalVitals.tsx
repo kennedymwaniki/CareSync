@@ -1,18 +1,17 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import Vitals from "./Vitals";
 import { getPatientVitals } from "../apis/PatientService";
-import { RootState } from "../app/store";
+
 import { Vital, VitalsResponse } from "../types/types";
+import { useProfile } from "../hooks/UseProfile";
 
 function TotalVitals() {
   const [loading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [vitalsData, setVitalsData] = useState<Vital[]>([]);
 
-  const user = useSelector((state: RootState) => state.auth.user);
-  // ! if there no no loggedin user Id no 2 will be the default id for testing porposes
-  const userId = user?.id ?? 2;
+  const { profile } = useProfile();
+  const userId = profile?.patient?.id;
   const fetchPatientVitals = async (patientId: number) => {
     setIsLoading(true);
     setError(null);
