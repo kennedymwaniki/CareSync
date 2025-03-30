@@ -29,6 +29,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import CareProviderRegistration from "./features/care providers/CareProviderRegistration";
 import Unauthorized from "./pages/Unauthorized";
 import DoctorProfile from "./features/doctor/DoctorProfile";
+import DoctorPatients from "./features/doctor/DoctorPatients";
+import DoctorPatientManagement from "./features/doctor/DoctorPatientManagement";
 
 const router = createBrowserRouter([
   {
@@ -80,7 +82,11 @@ const router = createBrowserRouter([
           },
           {
             path: "patients",
-            element: <PatientsListTable />,
+            element: <DoctorPatients />,
+          },
+          {
+            path: "patients/:patientId",
+            element: <DoctorPatientManagement />,
           },
           {
             path: "care-providers",
@@ -119,6 +125,7 @@ const router = createBrowserRouter([
             path: "patients",
             element: <PatientsListTable />,
           },
+
           {
             path: "care-providers",
             element: <CareProvidersTable />,

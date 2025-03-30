@@ -224,3 +224,40 @@ export const removePatientCareGiver = async (
     );
   }
 };
+
+//  get patient medication using patient id
+export const getPatientMedicationById = async (patientId: number) => {
+  try {
+    const payload = { patient_id: patientId };
+    const response = await api.post("/medications/fetch/by-patient", payload);
+    if (!response.data) {
+      throw new Error("No data received from server");
+    }
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch patient medication: ${error.message}`);
+    }
+    throw new Error(
+      "An unexpected error occurred while fetching patient medication"
+    );
+  }
+};
+
+// get patient vitals by patient id
+export const getPatientVitalsById = async (patientId: number) => {
+  try {
+    const response = await api.get(`/health-vitals/${patientId}`);
+    if (!response.data) {
+      throw new Error("No data received from server");
+    }
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch patient vitals: ${error.message}`);
+    }
+    throw new Error(
+      "An unexpected error occurred while fetching patient vitals"
+    );
+  }
+};

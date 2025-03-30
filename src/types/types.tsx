@@ -41,6 +41,10 @@ export interface HealthVital {
   isNormal: boolean;
 }
 
+export interface Vitals {
+  name: string;
+  value: string;
+}
 export interface PatientDataResponse {
   patient_stats: PatientStats;
   health_vitals: HealthVital[];

@@ -9,10 +9,11 @@ import {
   Clock,
   Clipboard,
   Building,
-  //   Upload,
   Camera,
+  Edit,
 } from "lucide-react";
 import { toast } from "sonner";
+import UpdateDoctorProfileForm from "./UpdateDoctorProfileForm";
 
 interface DoctorProfile {
   id: number;
@@ -44,16 +45,17 @@ interface DoctorProfile {
 
 const DoctorProfile = () => {
   const [profile, setProfile] = useState<DoctorProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [showUpdateForm, setShowUpdateForm] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchDoctorProfile();
   }, []);
 
-  const fetchDoctorProfile = async () => {
+  const fetchDoctorProfile = async (): Promise<void> => {
     try {
       setLoading(true);
       const response = await api.get("/user/doctor");
@@ -75,11 +77,13 @@ const DoctorProfile = () => {
     }
   };
 
-  const handleImageClick = () => {
+  const handleImageClick = (): void => {
     fileInputRef.current?.click();
   };
 
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -150,7 +154,17 @@ const DoctorProfile = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Doctor Profile</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Doctor Profile</h1>
+        <button
+          onClick={() => setShowUpdateForm(true)}
+          className="px-4 py-2 bg-[#454BE7] text-white rounded-md flex items-center"
+          aria-label="Update Profile"
+        >
+          <Edit className="w-4 h-4 mr-2" />
+          Update Profile
+        </button>
+      </div>
 
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         {/* Profile Header */}
@@ -319,6 +333,14 @@ const DoctorProfile = () => {
           </div>
         </div>
       </div>
+
+      {showUpdateForm && profile && (
+        <UpdateDoctorProfileForm
+          profile={profile}
+          onClose={() => setShowUpdateForm(false)}
+          onSuccess={fetchDoctorProfile}
+        />
+      )}
     </div>
   );
 };

@@ -32,7 +32,7 @@ export const getDoctorPatients = async (doctorId: number) => {
   try {
     const doctorPatients = await api.post(
       "/care-providers/fetch-doctor-patient",
-      { doctorId: doctorId }
+      { doctor_id: doctorId }
     );
     if (!doctorPatients.data) {
       throw new Error("No data received from server");
