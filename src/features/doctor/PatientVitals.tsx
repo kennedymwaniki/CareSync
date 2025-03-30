@@ -44,6 +44,7 @@ const PatientVitals = ({ patient_id }: PatientVitalsProps) => {
     if (patient_id) {
       fetchPatientVitals();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient_id]);
 
   const handleCreateVitals = async (data: {

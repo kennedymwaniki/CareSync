@@ -45,6 +45,7 @@ const VitalsForm = ({
     } else {
       setVitals(defaultVitals);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialVitals, action]);
 
   const handleInputChange = (
