@@ -4,20 +4,13 @@ import { getPatientSideEffects } from "../../apis/PatientService";
 import { useProfile } from "../../hooks/UseProfile";
 import Loader from "../../components/Loader";
 import Nodata from "../../assets/medication baner.png";
-import { IoAddSharp } from "react-icons/io5";
 import type { SideEffect, SideEffectApiResponse } from "../../types/types";
-import Modal from "../../components/Modal";
-import SideEffectsForm from "../../components/SideEffectsForm";
 import { toast } from "sonner";
 
 const PatientSideEffects = () => {
   const [sideEffects, setSideEffects] = useState<SideEffect[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setIsLoading] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
   const { profile } = useProfile();
   const patientId = profile?.patient.id;
@@ -113,19 +106,8 @@ const PatientSideEffects = () => {
 
   return (
     <div className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center justify-between space-x-4">
-          <h1 className="text-xl font-semibold">Side Effects</h1>
-          <div>
-            <button
-              className="text-white p-2 rounded-md bg-[#454BE7] flex items-center"
-              onClick={openModal}
-            >
-              <IoAddSharp className="text-white" />
-              Report Side Effect
-            </button>
-          </div>
-        </div>
+      <div className="mb-4">
+        <h1 className="text-xl font-semibold">Side Effects</h1>
       </div>
 
       <div className="overflow-x-auto">
@@ -144,10 +126,6 @@ const PatientSideEffects = () => {
           <tbody>{renderTableBody()}</tbody>
         </table>
       </div>
-
-      <Modal isOpen={isModalOpen} onClose={closeModal} title="Add Side Effect">
-        <SideEffectsForm />
-      </Modal>
     </div>
   );
 };

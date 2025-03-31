@@ -39,7 +39,23 @@ function TotalVitals() {
   }, [userId]);
 
   if (loading) {
-    return <div>Loading vitals...</div>;
+    return (
+      <div className="flex flex-col justify-between mt-4">
+        <h4 className="ml-2 font-medium from-neutral-950">Current Vitals</h4>
+        <div className="flex justify-between p-2">
+          {/* Three loading placeholders for vital cards */}
+          {[1, 2, 3].map((item) => (
+            <div key={item} className="animate-pulse w-1/3 px-2">
+              <div className="rounded-lg border border-gray-200 p-4">
+                <div className="h-4 bg-gray-200 rounded w-2/3 mb-2"></div>
+                <div className="h-6 bg-gray-200 rounded w-1/3 mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (error) {

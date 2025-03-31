@@ -2,7 +2,6 @@ import HomeBanner from "../../components/HomeBanner";
 import StatCards from "../../components/StatCards";
 import TotalVitals from "../../components/TotalVitals";
 import RightSideBar from "../../components/RightSideBar";
-import SideEffects from "../../components/SideEffects";
 import CurrentMedication from "../../components/CurrentMedication";
 import { getPatientDiagnosis } from "../../apis/DiagnosisService";
 import {
@@ -11,6 +10,7 @@ import {
 } from "../../apis/PatientService";
 import { useEffect, useState } from "react";
 import { useProfile } from "../../hooks/UseProfile";
+import PatientSideEffectItem from "./PatientSideffectItem";
 
 interface Medication {
   id: number;
@@ -93,8 +93,8 @@ const PatientSummary = () => {
 
         <h4 className="ml-2 mt-2 font-semibold">My health OverView</h4>
         <TotalVitals />
-        <div className="grid grid-cols-2 gap-4">
-          <SideEffects />
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <PatientSideEffectItem />
           <CurrentMedication />
         </div>
       </div>

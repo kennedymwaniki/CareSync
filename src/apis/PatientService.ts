@@ -385,3 +385,21 @@ export const getPatientMedicationAdherenceByMedication = async (
     }
   }
 };
+
+export const getPatientSideEffectsById = async (patient_id: number) => {
+  try {
+    const payload = { patient_id: patient_id };
+    const sideEffects = await api.post("/side-effects/fetch", payload);
+    if (!sideEffects.data) {
+      throw new Error("no data received from the server");
+    }
+    return sideEffects.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fecth side effects `);
+    }
+    throw new Error(
+      "An unexpected error occured while fetching your sideeffects"
+    );
+  }
+};

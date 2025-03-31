@@ -1,4 +1,3 @@
-import { PropsWithChildren } from "react";
 import api from "../../axios";
 
 export const updateSideEffects = async (sideEffectId: number) => {
@@ -51,9 +50,18 @@ export const deleteSideEffectById = async (sideEffectId: number) => {
   }
 };
 
+// Define the proper payload type for creating a side effect
+export interface SideEffectPayload {
+  medication_id: number;
+  datetime: string;
+  side_effect: string;
+  severity: "Mild" | "Moderate" | "Severe";
+  duration: number | null;
+  notes: string | null;
+}
+
 // create sideeffect
-// ! fix the payload to mathc the load needed in postman (/side-effects/create)
-export const createSideEffect = async (payload: PropsWithChildren) => {
+export const createSideEffect = async (payload: SideEffectPayload) => {
   try {
     const sideEffect = await api.post("/side-effects/create", payload);
     if (!sideEffect.data) {

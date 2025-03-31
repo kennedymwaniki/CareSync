@@ -12,6 +12,8 @@ import { useProfile } from "../hooks/UseProfile";
 import Modal from "../components/Modal";
 import MedicationForm from "./MedicationForm";
 import CustomActivationForm from "./CustomActivationForm";
+import SideEffectsForm from "./SideEffectsForm";
+
 interface EnhancedMedication extends MedicationResponse {
   calculatedEndDate: string;
 }
@@ -23,12 +25,12 @@ const MedicationsTable = () => {
   const [filter, setFilter] = useState<"All" | "Today">("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isActivationModalOpen, setIsActivationModalOpen] = useState(false);
+  const [isSideEffectModalOpen, setIsSideEffectModalOpen] = useState(false);
   const [selectedMedicationId, setSelectedMedicationId] = useState<
     number | null
   >(null);
 
   const { profile } = useProfile();
-  console.log(profile);
   const patientId = Number(profile?.patient.id);
 
   const openModal = () => setIsModalOpen(true);
@@ -42,6 +44,25 @@ const MedicationsTable = () => {
   const closeActivationModal = () => {
     setIsActivationModalOpen(false);
     setSelectedMedicationId(null);
+  };
+
+  const openSideEffectModal = (medicationId: number) => {
+    setSelectedMedicationId(medicationId);
+    setIsSideEffectModalOpen(true);
+  };
+
+  const closeSideEffectModal = () => {
+    setIsSideEffectModalOpen(false);
+    setSelectedMedicationId(null);
+  };
+
+  const handleSideEffectSuccess = () => {
+    closeSideEffectModal();
+    toast.success("Side effect reported successfully");
+  };
+
+  const handleStopNotifications = (medicationId: number) => {
+    toast.success(`Notifications stopped for medication #${medicationId}`);
   };
 
   const handleActivationSuccess = () => {
@@ -72,7 +93,6 @@ const MedicationsTable = () => {
         setMedications([]);
         return;
       }
-      // end date for each medication
       const enhancedMedications = response.data.map((med) => ({
         ...med,
         calculatedEndDate: calculateEndDate(med.prescribed_date, med.duration),
@@ -116,7 +136,6 @@ const MedicationsTable = () => {
     return true;
   });
 
-  // Render table body based on loading, error and data states
   const renderTableBody = () => {
     if (loading) {
       return (
@@ -173,13 +192,28 @@ const MedicationsTable = () => {
           </span>
         </td>
         <td className="px-4 py-2">
-          {!med.active && (
+          {!med.active ? (
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
               onClick={() => openActivationModal(med.id)}
             >
               Activate Medication
             </button>
+          ) : (
+            <div className="flex space-x-2">
+              <button
+                className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm"
+                onClick={() => openSideEffectModal(med.id)}
+              >
+                Report Side Effect
+              </button>
+              <button
+                className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-md text-sm"
+                onClick={() => handleStopNotifications(med.id)}
+              >
+                Stop Notifications
+              </button>
+            </div>
           )}
         </td>
       </tr>
@@ -228,7 +262,6 @@ const MedicationsTable = () => {
         </table>
       </div>
 
-      {/* Modal Component */}
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -240,7 +273,6 @@ const MedicationsTable = () => {
         />
       </Modal>
 
-      {/* New Modal for Activating Medication */}
       <Modal
         isOpen={isActivationModalOpen}
         onClose={closeActivationModal}
@@ -250,6 +282,20 @@ const MedicationsTable = () => {
           <CustomActivationForm
             medicationId={selectedMedicationId}
             onSuccess={handleActivationSuccess}
+          />
+        )}
+      </Modal>
+
+      <Modal
+        isOpen={isSideEffectModalOpen}
+        onClose={closeSideEffectModal}
+        title="Report Side Effect"
+      >
+        {selectedMedicationId && (
+          <SideEffectsForm
+            medicationId={selectedMedicationId}
+            onSuccess={handleSideEffectSuccess}
+            onCancel={closeSideEffectModal}
           />
         )}
       </Modal>

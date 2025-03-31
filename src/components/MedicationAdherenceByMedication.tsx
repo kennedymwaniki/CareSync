@@ -135,7 +135,7 @@ const MedicationAdherenceByMedication: React.FC = () => {
               dataKey="name"
               angle={-45}
               textAnchor="end"
-              height={70}
+              height={60}
               interval={0}
             />
             <YAxis
