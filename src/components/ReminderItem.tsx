@@ -77,10 +77,10 @@ const ReminderItem = ({
     <div className="mb-4 p-4 bg-white rounded-lg shadow-md border-l-4 border-[#454BE7]">
       <p className="text-sm text-gray-500 mb-2">
         {isPastDoseTime ? (
-          `You were to take this ${timeElapsed} ago`
+          `You were to take this  in the past ${timeElapsed}`
         ) : (
           <div className="flex justify-between">
-            <span>{`In ${timeRemaining}`}</span>
+            <span>{` You are to take this In ${timeRemaining}`}</span>
             <span className="text-gray-400">{currentTime}</span>
           </div>
         )}

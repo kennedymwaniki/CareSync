@@ -26,7 +26,7 @@ const PatientSideBar = ({ navigation }: SidebarProps) => {
     toast.success("Logged out successfully");
   };
   return (
-    <aside className="w-64 bg-white shadow-xl min-h-screen flex flex-col  border-r">
+    <aside className="w-52 bg-white shadow-xl min-h-screen flex flex-col  border-r">
       <div>
         <div className="flex items-center justify-center py-3">
           <NavLink to="/" className="text-black font-bold text-xl">

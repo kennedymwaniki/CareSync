@@ -2,24 +2,26 @@ import { BsDropletHalf } from "react-icons/bs";
 import { formatDistanceToNow, parseISO } from "date-fns";
 
 interface NotificationItemProps {
-  medicationName: string;
-  dosageStrength: string;
-  doseTime: string;
-  status: "Pending" | "Taken" | "Missed";
+  medicationName?: string;
+  dosageStrength?: string;
+  doseTime?: string;
+  status?: "Pending" | "Taken" | "Missed";
 }
 
 function NotificationItem({
-  medicationName,
-  dosageStrength,
-  doseTime,
-  status,
+  medicationName = "No medication name",
+  dosageStrength = "No dosage specified",
+  doseTime = new Date().toISOString(),
+  status = "Pending",
 }: NotificationItemProps) {
-  const timeUntilDose = formatDistanceToNow(parseISO(doseTime), {
-    addSuffix: true,
-  });
+  const timeUntilDose = doseTime
+    ? formatDistanceToNow(parseISO(doseTime), {
+        addSuffix: true,
+      })
+    : "Time not specified";
 
   return (
-    <div className="flex items-center justify-between p-[4px] border-gray-400 border rounded-lg">
+    <div className="flex items-center justify-between p-[4px] border-gray-400 border rounded-lg w-auto">
       <div>
         <BsDropletHalf className="text-[#454BE7]" />
       </div>
