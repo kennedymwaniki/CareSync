@@ -5,7 +5,10 @@ import RightSideBar from "../../components/RightSideBar";
 import SideEffects from "../../components/SideEffects";
 import CurrentMedication from "../../components/CurrentMedication";
 import { getPatientDiagnosis } from "../../apis/DiagnosisService";
-import { getPatientMedication } from "../../apis/PatientService";
+import {
+  getPatientCareProviders,
+  getPatientMedication,
+} from "../../apis/PatientService";
 import { useEffect, useState } from "react";
 import { useProfile } from "../../hooks/UseProfile";
 
@@ -14,14 +17,18 @@ interface Medication {
 }
 
 interface Diagnosis {
-  // Add relevant diagnosis fields
   id: number;
-  // ... other fields
+}
+
+interface CareGivers {
+  id: number;
 }
 
 const PatientSummary = () => {
   const [medication, setMedication] = useState<Medication[]>([]);
   const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
+  const [careGivers, setCareGivers] = useState<CareGivers[]>([]);
+
   const { profile } = useProfile();
   console.log(profile); // Use the custom hook
 
@@ -30,14 +37,17 @@ const PatientSummary = () => {
       if (!profile?.patient?.id) return;
 
       try {
-        const [medicationResponse, diagnosisResponse] = await Promise.all([
-          getPatientMedication(profile.patient.id),
-          getPatientDiagnosis(profile.patient.id),
-        ]);
+        const [medicationResponse, diagnosisResponse, careproviders] =
+          await Promise.all([
+            getPatientMedication(profile.patient.id),
+            getPatientDiagnosis(profile.patient.id),
+            getPatientCareProviders(profile.patient.id),
+          ]);
 
         // Assuming the responses contain a data property with the array
         setMedication(medicationResponse.data || []);
         setDiagnosis(diagnosisResponse.data || []);
+        setCareGivers(careproviders.data || []);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -58,7 +68,7 @@ const PatientSummary = () => {
   };
   const data3 = {
     name: "Care Providers",
-    quantity: 3,
+    quantity: careGivers.length ?? 0,
     color: "border-r-yellow-500",
   };
   const data4 = {

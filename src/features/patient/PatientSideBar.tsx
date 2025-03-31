@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FiBell, FiSettings, FiChevronDown } from "react-icons/fi";
 import logo from "../../assets/carepulse logo_2.png";
 import { logoutUser } from "../../apis/authSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
+import { useProfile } from "../../hooks/UseProfile";
+import { getTodaysMedication } from "../../apis/PatientService";
 
 interface SidebarProps {
   navigation: {
@@ -16,15 +18,38 @@ interface SidebarProps {
 
 const PatientSideBar = ({ navigation }: SidebarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [medicationCount, setMedicationCount] = useState<number>(0);
   const dispatch = useDispatch();
+
+  const { profile } = useProfile();
+  const patient_id = profile?.patient?.id;
+
+  useEffect(() => {
+    const fetchMedicationCount = async () => {
+      if (!patient_id) return;
+
+      try {
+        const result = await getTodaysMedication(patient_id);
+        if (!result.error && result.schedules?.medications) {
+          setMedicationCount(result.schedules.medications.length);
+        }
+      } catch (error) {
+        console.error("Error fetching medication count:", error);
+      }
+    };
+
+    fetchMedicationCount();
+  }, [patient_id]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
+
   const logout = () => {
     dispatch(logoutUser());
     toast.success("Logged out successfully");
   };
+
   return (
     <aside className="w-52 bg-white shadow-xl min-h-screen flex flex-col  border-r">
       <div>
@@ -72,7 +97,7 @@ const PatientSideBar = ({ navigation }: SidebarProps) => {
             <FiBell className="h-5 w-5 mr-3 flex-shrink-0" />
             <span className="flex-1">Notifications</span>
             <span className="mx-auto text-xs bg-blue-600 text-white rounded-full px-2 py-0.5 ">
-              2
+              {medicationCount}
             </span>
           </NavLink>
           <NavLink

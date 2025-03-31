@@ -341,3 +341,47 @@ export const markMedicationAsTaken = async (
     );
   }
 };
+
+// get Patient Medical adhernce
+export const getPatientMedicalAdherence = async (patient_id: number) => {
+  try {
+    const adherence = await api.post("/reports/medical-adherence-report", {
+      patient_id: patient_id,
+    });
+    if (!adherence.data) {
+      throw new Error("No data received from server");
+    }
+    return adherence.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`Failed to fetch medical adherence: ${error.message}`);
+      throw new Error(`Failed to fetch medical adherence: ${error.message}`);
+    }
+    throw new Error(
+      "An unexpected error occurred while fetching medical adherence"
+    );
+  }
+};
+
+export const getPatientMedicationAdherenceByMedication = async (
+  patient_id: number
+) => {
+  try {
+    const adherence = await api.post(
+      "/reports/medication-adherence-by-medication",
+      {
+        patient_id: patient_id,
+      }
+    );
+    if (!adherence.data) {
+      throw new Error("No data received from server");
+    }
+
+    return adherence.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`Failed to fetch medication adherence: ${error.message}`);
+      throw new Error(`Failed to fetch medication adherence: ${error.message}`);
+    }
+  }
+};

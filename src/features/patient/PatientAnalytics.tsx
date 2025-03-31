@@ -1,5 +1,13 @@
+import AdherenceCircularChart from "../../components/AdherenceCircularChart";
+import MedicationAdherenceByMedication from "../../components/MedicationAdherenceByMedication";
+
 const PatientAnalytics = () => {
-  return <div>PatientAnalytics page</div>;
+  return (
+    <div>
+      <AdherenceCircularChart />
+      <MedicationAdherenceByMedication />
+    </div>
+  );
 };
 
 export default PatientAnalytics;
