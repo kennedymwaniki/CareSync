@@ -11,7 +11,7 @@ import Loader from "../components/Loader";
 import { useProfile } from "../hooks/UseProfile";
 import Modal from "../components/Modal";
 import MedicationForm from "./MedicationForm";
-
+import CustomActivationForm from "./CustomActivationForm";
 interface EnhancedMedication extends MedicationResponse {
   calculatedEndDate: string;
 }
@@ -22,6 +22,10 @@ const MedicationsTable = () => {
   const [loading, setIsLoading] = useState<boolean>(false);
   const [filter, setFilter] = useState<"All" | "Today">("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isActivationModalOpen, setIsActivationModalOpen] = useState(false);
+  const [selectedMedicationId, setSelectedMedicationId] = useState<
+    number | null
+  >(null);
 
   const { profile } = useProfile();
   console.log(profile);
@@ -29,6 +33,22 @@ const MedicationsTable = () => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const openActivationModal = (medicationId: number) => {
+    setSelectedMedicationId(medicationId);
+    setIsActivationModalOpen(true);
+  };
+
+  const closeActivationModal = () => {
+    setIsActivationModalOpen(false);
+    setSelectedMedicationId(null);
+  };
+
+  const handleActivationSuccess = () => {
+    closeActivationModal();
+    fetchMedications();
+    toast.success("Medication activated successfully");
+  };
 
   const calculateEndDate = (startDate: string, duration: string): string => {
     const durationMatch = duration.match(/(\d+)\s*days?/i);
@@ -133,7 +153,7 @@ const MedicationsTable = () => {
       <tr key={med.id} className="hover:bg-gray-50 text-sm text-nowrap">
         <td className="px-4 py-2 text-center">{med.id}</td>
         <td className="px-4 py-2">{med.medication_name}</td>
-        <td className="px-4 py-2">{`${med.dosage_quantity} ${med.dosage_strength}`}</td>
+        <td className="px-4 py-2">{`${med.dosage_strength}`}</td>
         <td className="px-4 py-2">{med.frequency}</td>
         <td className="px-4 py-2">
           {format(parseISO(med.prescribed_date), "yyyy-MM-dd")}
@@ -141,8 +161,27 @@ const MedicationsTable = () => {
         <td className="px-4 py-2">{med.calculatedEndDate}</td>
         <td className="px-4 py-2">{med.doctor?.name}</td>
         <td className="px-4 py-2">{`${med.route?.name} - ${med.form?.name}`}</td>
-        <td className="px-4 py-2">{med.active ? "Active" : "Inactive"}</td>
-        <td className="px-4 py-2">{/* Add your action buttons here */}</td>
+        <td className="px-4 py-2">
+          <span
+            className={`px-2 py-1 rounded-full text-xs ${
+              med.active
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {med.active ? "Active" : "Inactive"}
+          </span>
+        </td>
+        <td className="px-4 py-2">
+          {!med.active && (
+            <button
+              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
+              onClick={() => openActivationModal(med.id)}
+            >
+              Activate Medication
+            </button>
+          )}
+        </td>
       </tr>
     ));
   };
@@ -199,6 +238,20 @@ const MedicationsTable = () => {
           patient_id={patientId}
           onSuccess={handleMedicationAdded}
         />
+      </Modal>
+
+      {/* New Modal for Activating Medication */}
+      <Modal
+        isOpen={isActivationModalOpen}
+        onClose={closeActivationModal}
+        title="Activate Medication"
+      >
+        {selectedMedicationId && (
+          <CustomActivationForm
+            medicationId={selectedMedicationId}
+            onSuccess={handleActivationSuccess}
+          />
+        )}
       </Modal>
     </div>
   );

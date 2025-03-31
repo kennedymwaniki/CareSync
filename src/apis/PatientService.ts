@@ -261,3 +261,83 @@ export const getPatientVitalsById = async (patientId: number) => {
     );
   }
 };
+
+interface Medication {
+  id: number;
+  medication_name: string;
+  dosage_strength: string;
+  dosage_quantity: string;
+  form_id: number;
+  route_id: number;
+  frequency: string;
+  duration: string;
+  prescribed_date: string;
+  active: number;
+}
+
+interface MedicationSchedule {
+  id: number;
+  medication_id: number;
+  dose_time: string;
+  status: "Pending" | "Taken" | "Missed";
+  medication: Medication;
+}
+
+interface MedicationSchedulesResponse {
+  error: boolean;
+  schedules: {
+    now: string;
+    start_of_day: string;
+    end_of_day: string;
+    count: number;
+    medications: MedicationSchedule[];
+  };
+}
+
+// Updated getTodaysMedication function
+export const getTodaysMedication = async (
+  patientId: number
+): Promise<MedicationSchedulesResponse> => {
+  try {
+    const response = await api.get(`/medication-schedules/${patientId}`);
+
+    if (!response.data) {
+      throw new Error("No data received from server");
+    }
+
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`Failed to fetch today's medication: ${error.message}`);
+      throw new Error(`Failed to fetch today's medication: ${error.message}`);
+    }
+
+    throw new Error(
+      "An unexpected error occurred while fetching today's medication"
+    );
+  }
+};
+
+// You would also need to implement a function to mark medications as taken
+export const markMedicationAsTaken = async (
+  scheduleId: number
+): Promise<{ error: boolean; message: string }> => {
+  try {
+    const response = await api.post(`/medication-schedules/take/${scheduleId}`);
+
+    if (!response.data) {
+      throw new Error("No data received from server");
+    }
+
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`Failed to mark medication as taken: ${error.message}`);
+      throw new Error(`Failed to mark medication as taken: ${error.message}`);
+    }
+
+    throw new Error(
+      "An unexpected error occurred while marking medication as taken"
+    );
+  }
+};
