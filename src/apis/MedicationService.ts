@@ -41,3 +41,24 @@ export const activateMedication = async (data: MedicationActivationPayload) => {
     throw new Error("An unexpected error occurred while activating medication");
   }
 };
+
+// mark as taken
+
+export const markMedicationAsTaken = async (medication_schedule_id: number) => {
+  try {
+    const response = await api.post("medications/schedule/take", {
+      medication_schedule_id: medication_schedule_id,
+    });
+    if (!response.data) {
+      throw new Error("No data received from server");
+    }
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to mark medication as taken: ${error.message}`);
+    }
+    throw new Error(
+      "An unexpected error occurred while marking medication as taken"
+    );
+  }
+};

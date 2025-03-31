@@ -318,12 +318,22 @@ export const getTodaysMedication = async (
   }
 };
 
-// You would also need to implement a function to mark medications as taken
+// Function to mark medication as taken
 export const markMedicationAsTaken = async (
-  scheduleId: number
+  scheduleId: number,
+  takenTime: string
 ): Promise<{ error: boolean; message: string }> => {
   try {
-    const response = await api.post(`/medication-schedules/take/${scheduleId}`);
+    // Format the date to "YYYY-MM-DD HH:MM:SS" format
+    const formattedTime = new Date(takenTime)
+      .toISOString()
+      .replace("T", " ")
+      .substring(0, 19);
+
+    const response = await api.post(`/medications/schedule/take`, {
+      medication_schedule_id: scheduleId,
+      taken_at: formattedTime,
+    });
 
     if (!response.data) {
       throw new Error("No data received from server");

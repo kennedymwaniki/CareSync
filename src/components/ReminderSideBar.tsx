@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { getTodaysMedication } from "../apis/PatientService";
+import {
+  getTodaysMedication,
+  markMedicationAsTaken,
+} from "../apis/PatientService";
 import { useProfile } from "../hooks/UseProfile";
 import ReminderItem from "./ReminderItem";
 import Loader from "./Loader";
@@ -78,18 +81,37 @@ const ReminderSideBar = () => {
   // Function to mark medication as taken
   const handleTakeMedication = async (scheduleId: number) => {
     try {
-      // Here you would call your API to mark the medication as taken
-      // For now, this is a placeholder
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Get current timestamp in ISO format
+      const takenTime = new Date().toISOString();
 
-      // Update local state to reflect the change
-      setPendingMedications((prevMeds) =>
-        prevMeds.filter((med) => med.id !== scheduleId)
-      );
+      // Call the API to mark medication as taken with the timestamp
+      const response = await markMedicationAsTaken(scheduleId, takenTime);
 
-      return Promise.resolve();
+      // Check if the response was successful
+      if (response && !response.error) {
+        // Update local state to reflect the change
+        setPendingMedications((prevMeds) =>
+          prevMeds.map((med) =>
+            med.id === scheduleId
+              ? { ...med, status: "Taken" as "Pending" | "Taken" | "Missed" }
+              : med
+          )
+        );
+
+        // Show success toast
+        toast.success("Medication marked as taken successfully");
+        return Promise.resolve();
+      } else {
+        // If there was an error in the response
+        const errorMsg =
+          response?.message || "Failed to mark medication as taken";
+        toast.error(errorMsg);
+        return Promise.reject(new Error(errorMsg));
+      }
     } catch (error) {
+      // Handle any exceptions
       console.error("Failed to mark medication as taken:", error);
+      toast.error(error instanceof Error ? error.message : "An error occurred");
       return Promise.reject(error);
     }
   };
