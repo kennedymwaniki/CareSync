@@ -24,7 +24,7 @@ const CareProviderRegistration = () => {
   const [notification, setNotification] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const role = "Patient";
+  const role = "Caregiver"; // Set the role to "CareProvider"
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (data.password !== data.confirmPassword) {

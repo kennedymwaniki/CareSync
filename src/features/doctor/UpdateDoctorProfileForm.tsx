@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import api from "../../../axios";
 import { toast } from "sonner";
-import { X } from "lucide-react";
+import { X, Camera } from "lucide-react";
 
 interface DoctorProfile {
   id: number;
@@ -71,6 +71,8 @@ const UpdateDoctorProfileForm = ({
   });
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -82,6 +84,56 @@ const UpdateDoctorProfileForm = ({
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleImageClick = (): void => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size should be less than 5MB");
+      return;
+    }
+
+    // Check file type
+    if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+      toast.error("Only JPEG, JPG and PNG images are allowed");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    try {
+      setUploading(true);
+      const response = await api.patch("/user/doctor", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (!response.data.error) {
+        toast.success("Profile image updated successfully");
+        onSuccess();
+      } else {
+        toast.error(response.data.message || "Failed to update profile image");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to upload image");
+      }
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -124,6 +176,41 @@ const UpdateDoctorProfileForm = ({
         </div>
 
         <div className="p-6">
+          {/* Profile Image Section */}
+          <div className="flex justify-center mb-6">
+            <div className="relative group">
+              <img
+                src={
+                  profile.user.profile.avatar ||
+                  "https://via.placeholder.com/150"
+                }
+                alt={profile.user.name}
+                className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
+              />
+              <div
+                onClick={handleImageClick}
+                className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity duration-300"
+              >
+                {uploading ? (
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <>
+                    <Camera className="w-5 h-5 text-white" />
+                    <span className="sr-only">Change Image</span>
+                  </>
+                )}
+              </div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/png, image/jpeg, image/jpg"
+                onChange={handleImageChange}
+                disabled={uploading}
+              />
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>

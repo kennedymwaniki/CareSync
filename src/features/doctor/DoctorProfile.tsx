@@ -104,7 +104,7 @@ const DoctorProfile = () => {
 
     try {
       setUploading(true);
-      const response = await api.post("/profile/update-avatar", formData, {
+      const response = await api.patch("/user/doctor", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -175,11 +175,22 @@ const DoctorProfile = () => {
               <div className="relative group">
                 <img
                   src={
-                    profile.user.profile.avatar ||
-                    "https://via.placeholder.com/150"
+                    profile.user.profile.avatar &&
+                    profile.user.profile.avatar !== "null"
+                      ? profile.user.profile.avatar
+                      : "https://ui-avatars.com/api/?name=" +
+                        encodeURIComponent(profile.user.name) +
+                        "&background=4A56E2&color=fff"
                   }
                   alt={profile.user.name}
                   className="w-32 h-32 rounded-full border-4 border-white mb-4 object-cover"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src =
+                      "https://ui-avatars.com/api/?name=" +
+                      encodeURIComponent(profile.user.name) +
+                      "&background=4A56E2&color=fff";
+                  }}
                 />
                 <div
                   onClick={handleImageClick}

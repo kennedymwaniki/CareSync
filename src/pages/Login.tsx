@@ -78,7 +78,7 @@ const Login = () => {
       if (response.user.role === "Doctor") {
         navigate("/doctor");
       }
-      if (response.user.role === "CareProvider") {
+      if (response.user.role === "Caregiver") {
         navigate("/careProvider");
       }
     } catch (err) {
