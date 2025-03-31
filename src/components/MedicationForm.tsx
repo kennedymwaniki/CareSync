@@ -94,10 +94,21 @@ const MedicationForm = ({ patient_id, onSuccess }: PatientProp) => {
   const onSubmit = async (data: MedicationFormData) => {
     setIsSubmitting(true);
     try {
-      // Create payload that includes patient_id
+      // Find the selected unit name based on the unit_id
+      const selectedUnit = unitOptions.find(
+        (unit) => unit.id === Number(data.unit_id)
+      );
+
+      // Create combined dosage strength with unit (e.g., "500 mg")
+      const combinedDosageStrength = `${data.dosage_strength} ${
+        selectedUnit?.name || ""
+      }`;
+
+      // Create payload that includes patient_id and the combined dosage strength
       const payload = {
         ...data,
         patient_id,
+        dosage_strength: combinedDosageStrength,
       };
 
       console.log(payload);

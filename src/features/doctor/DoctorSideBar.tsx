@@ -28,7 +28,7 @@ const DoctorSideBar = ({ navigation }: SidebarProps) => {
   };
 
   return (
-    <aside className="w-72 bg-slate-100 shadow-xl min-h-screen flex flex-col border-r">
+    <aside className="w-48 bg-slate-100 shadow-xl min-h-screen flex flex-col border-r">
       <div>
         <div className="flex items-center justify-center py-4">
           <NavLink to="/" className="text-black font-bold text-xl">
