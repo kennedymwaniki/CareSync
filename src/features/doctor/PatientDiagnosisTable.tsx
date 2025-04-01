@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { getDiagnosisById } from "../../apis/DiagnosisService";
 import { toast } from "sonner";
-import Loader from "../../components/Loader";
+
 import Nodata from "../../assets/medication baner.png";
 import Modal from "../../components/Modal";
 import DiagnosisForm from "../../components/DiagnosisForm";
 
-interface PatientDiagnosisTableProps {
+export interface PatientDiagnosisTableProps {
   patient_id: number;
 }
 
@@ -45,7 +45,7 @@ export interface ApiResponse {
   };
 }
 
-const PatientDiagnosisTable = ({ patient_id }: PatientDiagnosisTableProps) => {
+const PatientDiagnosisTable = ({ patient_id }: { patient_id: number }) => {
   const [diagnoses, setDiagnoses] = useState<DiagnosisResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -81,17 +81,23 @@ const PatientDiagnosisTable = ({ patient_id }: PatientDiagnosisTableProps) => {
     toast.success("Diagnosis added successfully");
   };
 
-  const renderTableBody = () => {
-    if (loading) {
-      return (
-        <tr>
-          <td colSpan={5} className="text-center py-4">
-            <Loader />
-          </td>
-        </tr>
-      );
-    }
+  if (loading) {
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+          <div className="space-y-4">
+            <div className="h-10 bg-gray-200 rounded"></div>
+            {[1, 2, 3].map((item) => (
+              <div key={item} className="h-16 bg-gray-100 rounded"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
+  const renderTableBody = () => {
     if (error) {
       return (
         <tr>

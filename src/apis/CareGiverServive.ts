@@ -45,3 +45,24 @@ export const removePatientCaregiverRelation = async (
     );
   }
 };
+
+// get caregiver patients
+
+export const getCareGiverPatients = async (caregiver_id: number) => {
+  try {
+    const response = await api.post("/care-providers/fetch-caregiver-patient", {
+      caregiver_id: caregiver_id,
+    });
+    if (!response.data) {
+      throw new Error("No data received from server");
+    }
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch caregiver patients: ${error.message}`);
+    }
+    throw new Error(
+      "An unexpected error occurred while fetching caregiver patients"
+    );
+  }
+};

@@ -13,7 +13,7 @@ import PatientNotifications from "./features/patient/PatientNotifications";
 import DoctorDashboard from "./features/doctor/DoctorDashboard";
 import DoctorSummary from "./features/doctor/DoctorSummary";
 import DoctorNotes from "./features/doctor/DoctorNotes";
-import PatientsListTable from "./features/doctor/PatientsListTable";
+
 import CareProvidersSummary from "./features/care providers/CareProvidersSummary";
 import CareGiversDashBoard from "./features/care providers/CareGiversDashBoard";
 import CareGiverReports from "./features/care providers/CareGiverReports";
@@ -31,6 +31,8 @@ import Unauthorized from "./pages/Unauthorized";
 import DoctorProfile from "./features/doctor/DoctorProfile";
 import DoctorPatients from "./features/doctor/DoctorPatients";
 import DoctorPatientManagement from "./features/doctor/DoctorPatientManagement";
+import CareGiverPatients from "./features/care providers/CareGiverPatients";
+import CareGiverPatientManagement from "./features/care providers/CareGiverPatientManagement";
 
 const router = createBrowserRouter([
   {
@@ -123,7 +125,11 @@ const router = createBrowserRouter([
           },
           {
             path: "patients",
-            element: <PatientsListTable />,
+            element: <CareGiverPatients />,
+          },
+          {
+            path: "patients/:patientId",
+            element: <CareGiverPatientManagement />,
           },
 
           {

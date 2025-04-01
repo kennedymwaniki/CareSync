@@ -86,6 +86,7 @@ const DoctorSummary = () => {
           throw new Error("Failed to fetch doctor profile");
         }
 
+        console.log("Doctor Profile Response:", profileResponse.data);
         const doctorId = profileResponse.data.data.id;
 
         // Then fetch the doctor's patients

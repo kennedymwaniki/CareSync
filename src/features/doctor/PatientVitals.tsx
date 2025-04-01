@@ -94,7 +94,21 @@ const PatientVitals = ({ patient_id }: PatientVitalsProps) => {
   };
 
   if (loading) {
-    return <div>Loading vitals...</div>;
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[1, 2, 3].map((item) => (
+              <div key={item} className="p-4 border rounded-lg">
+                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (error) {

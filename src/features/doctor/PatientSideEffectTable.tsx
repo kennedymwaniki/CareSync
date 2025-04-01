@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { getPatientSideEffects } from "../../apis/PatientService";
-import Loader from "../../components/Loader";
+
 import Nodata from "../../assets/medication baner.png";
 import type { SideEffect, SideEffectApiResponse } from "../../types/types";
 import { toast } from "sonner";
@@ -50,8 +50,16 @@ const PatientSideEffectTable = ({
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-8">
-        <Loader />
+      <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+          <div className="space-y-4">
+            <div className="h-10 bg-gray-200 rounded"></div>
+            {[1, 2, 3].map((item) => (
+              <div key={item} className="h-16 bg-gray-100 rounded"></div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
