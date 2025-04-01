@@ -49,7 +49,7 @@ function RightSideBar() {
   }, [profile?.patient?.id]);
 
   return (
-    <div className="w-80 mt-2 p-[10px] rounded-lg border border-gray-200 h-screen overflow-x-auto">
+    <div className="w-80 mt-2 p-[10px]  rounded-lg border border-gray-200 h-screen">
       <MiniDateComponent />
       <div className="space-y-[5px]">
         <h1 className="text-sm font-semibold">Upcoming Medications</h1>

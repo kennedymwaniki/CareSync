@@ -2,7 +2,7 @@ import HomeBanner from "../../components/HomeBanner";
 import StatCards from "../../components/StatCards";
 import TotalVitals from "../../components/TotalVitals";
 import RightSideBar from "../../components/RightSideBar";
-import CurrentMedication from "../../components/CurrentMedication";
+// import CurrentMedication from "../../components/CurrentMedication";
 import { getPatientDiagnosis } from "../../apis/DiagnosisService";
 import {
   getPatientCareProviders,
@@ -78,8 +78,8 @@ const PatientSummary = () => {
   };
 
   return (
-    <div className="flex justify-between  p-1">
-      <div className=" ml-2">
+    <div className="flex  justify-evenly w-full">
+      <div className="">
         <HomeBanner />
 
         <p className="ml-2">This is the patient summary page</p>
@@ -95,7 +95,7 @@ const PatientSummary = () => {
         <TotalVitals />
         <div className="grid grid-cols-2 gap-4 mt-4">
           <PatientSideEffectItem />
-          <CurrentMedication />
+          {/* <CurrentMedication /> */}
         </div>
       </div>
 
