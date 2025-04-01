@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { FiBell, FiSettings, FiChevronDown } from "react-icons/fi";
+import { FiBell, FiChevronDown } from "react-icons/fi";
 import logo from "../../assets/carepulse logo_2.png";
 import { logoutUser } from "../../apis/authSlice";
 import { useDispatch } from "react-redux";
@@ -100,7 +100,7 @@ const PatientSideBar = ({ navigation }: SidebarProps) => {
               {medicationCount}
             </span>
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to="/settings"
             className={({ isActive }) =>
               `group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
@@ -112,7 +112,7 @@ const PatientSideBar = ({ navigation }: SidebarProps) => {
           >
             <FiSettings className="h-5 w-5 mr-3 flex-shrink-0" />
             <span className="flex-1">Settings</span>
-          </NavLink>
+          </NavLink> */}
         </div>
       </div>
 

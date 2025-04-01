@@ -71,8 +71,6 @@ function RightSideBar() {
         ) : (
           <p className="text-xs text-gray-500 py-2">No upcoming medications</p>
         )}
-
-        {/* <Timelines /> */}
       </div>
     </div>
   );
