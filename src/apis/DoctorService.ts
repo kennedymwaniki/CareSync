@@ -105,3 +105,23 @@ export const getMissedPatientsMedication = async () => {
     }
   }
 };
+
+//  get patients Latest Side Effects
+export const getLatestSideEffects = async () => {
+  try {
+    const response = await api.post(
+      "/reports/health-provider/patient-latest-side-effects"
+    );
+    if (!response.data) {
+      throw new Error("No data received from server");
+    }
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch latest side effects: ${error.message}`);
+    }
+    throw new Error(
+      "An unexpected error occurred while fetching latest side effects"
+    );
+  }
+};
