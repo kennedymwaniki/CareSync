@@ -26,9 +26,12 @@ export const getPatientVitals = async (patientId: number) => {
 };
 
 // get patient medication
-export const getPatientMedication = async (patient_id: number) => {
+export const getPatientMedication = async (
+  patient_id: number,
+  per_page: number = 100
+) => {
   try {
-    const payload = { patient_id: patient_id };
+    const payload = { patient_id, per_page: per_page.toString() };
     console.log("Request payload:", payload);
     const Medication = await api.post("/medications/fetch/by-patient", payload);
     if (!Medication.data) {
@@ -228,7 +231,7 @@ export const removePatientCareGiver = async (
 //  get patient medication using patient id
 export const getPatientMedicationById = async (patientId: number) => {
   try {
-    const payload = { patient_id: patientId, per_page: "100" };
+    const payload = { patient_id: patientId, per_page: 100 };
     const response = await api.post("/medications/fetch/by-patient", payload);
     if (!response.data) {
       throw new Error("No data received from server");

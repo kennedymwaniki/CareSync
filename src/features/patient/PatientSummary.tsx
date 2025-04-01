@@ -71,11 +71,11 @@ const PatientSummary = () => {
     quantity: careGivers.length ?? 0,
     color: "border-r-yellow-500",
   };
-  const data4 = {
-    name: "severe Medication",
-    quantity: 30,
-    color: "border-r-red-700",
-  };
+  // const data4 = {
+  //   name: "severe Medication",
+  //   quantity: 30,
+  //   color: "border-r-red-700",
+  // };
 
   return (
     <div className="flex justify-evenly w-full">
@@ -88,7 +88,7 @@ const PatientSummary = () => {
           <StatCards content={data} />
           <StatCards content={data2} />
           <StatCards content={data3} />
-          <StatCards content={data4} />
+          {/* <StatCards content={data4} /> */}
         </div>
 
         <h4 className="ml-2 mt-2 font-semibold">My health OverView</h4>
