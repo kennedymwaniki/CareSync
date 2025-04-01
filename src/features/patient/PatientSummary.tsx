@@ -78,7 +78,7 @@ const PatientSummary = () => {
   };
 
   return (
-    <div className="flex  justify-evenly w-full">
+    <div className="flex justify-evenly w-full">
       <div className="">
         <HomeBanner />
 
