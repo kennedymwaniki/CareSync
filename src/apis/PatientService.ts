@@ -228,7 +228,7 @@ export const removePatientCareGiver = async (
 //  get patient medication using patient id
 export const getPatientMedicationById = async (patientId: number) => {
   try {
-    const payload = { patient_id: patientId, per_page: 100 };
+    const payload = { patient_id: patientId, per_page: "100" };
     const response = await api.post("/medications/fetch/by-patient", payload);
     if (!response.data) {
       throw new Error("No data received from server");
