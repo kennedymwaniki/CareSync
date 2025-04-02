@@ -178,7 +178,7 @@ export interface MedicationResponse {
   doctor: Doctor;
   caregiver: null | number;
   stock: number;
-  active: number;
+  active: boolean;
   diagnosis: Diagnosis;
 }
 
